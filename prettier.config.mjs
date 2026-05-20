@@ -5,6 +5,7 @@
 const config = {
   arrowParens: "always",
   bracketSpacing: true,
+  plugins: ["prettier-plugin-tailwindcss"],
   endOfLine: "auto",
   jsxSingleQuote: false,
   printWidth: 80,
