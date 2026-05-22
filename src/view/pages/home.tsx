@@ -205,7 +205,7 @@ export function Home() {
             </p>
 
             <button
-              onClick={() => navigate("")}
+              onClick={() => navigate("/create")}
               className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-8 py-4 font-semibold text-white transition-all hover:bg-emerald-600 active:scale-95"
             >
               <Plus className="size-5" />

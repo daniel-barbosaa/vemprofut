@@ -1,11 +1,13 @@
+import { v4 as uuid } from "uuid";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { Match, Pelada } from "./types";
+import type { CreatePeladaDTO, Match, Pelada } from "./types";
 
 type Store = {
   pelada: Pelada | null;
   resetPelada: () => void;
   startMatch(): void;
+  createPelada(data: CreatePeladaDTO): void;
 };
 export const usePeladaStore = create<Store>()(
   persist(
@@ -38,6 +40,26 @@ export const usePeladaStore = create<Store>()(
             currentMatch: match,
           },
         });
+      },
+      createPelada: ({
+        name,
+        matchDuration,
+        goalLimit,
+        maxConsecutiveWins,
+      }: CreatePeladaDTO) => {
+        const newPelada: Pelada = {
+          id: uuid(),
+          name,
+          matchDuration,
+          goalLimit,
+          maxConsecutiveWins,
+          createdAt: Date.now(),
+          players: [],
+          sessionPlayers: [],
+          matches: [],
+          queue: [],
+        };
+        set({ pelada: newPelada });
       },
     }),
     { name: "pelada-storage" },
