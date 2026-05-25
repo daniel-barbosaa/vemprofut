@@ -1,6 +1,7 @@
 import { usePeladaStore } from "@/store/pelada/pelada.store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import {
   createPeladaFormDefaultValues,
   createPeladaSchema,
@@ -9,6 +10,7 @@ import {
 
 export function useCreatePeladaController() {
   const { createPelada } = usePeladaStore();
+  const navigate = useNavigate();
   const {
     handleSubmit: hookFormSubmit,
     register,
@@ -21,6 +23,7 @@ export function useCreatePeladaController() {
 
   const handleSubmit = hookFormSubmit(async (data) => {
     createPelada(data);
+    navigate("/players");
   });
 
   return { handleSubmit, register, errors, watch };

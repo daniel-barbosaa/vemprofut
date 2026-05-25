@@ -1,14 +1,17 @@
 import { v4 as uuid } from "uuid";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { CreatePeladaDTO, Match, Pelada } from "./types";
+import type { CreatePeladaDTO, Match, Pelada, Player } from "./types";
 
 type Store = {
   pelada: Pelada | null;
   resetPelada: () => void;
   startMatch(): void;
   createPelada(data: CreatePeladaDTO): void;
+  addPlayer(name: string): void;
+  removePlayer(playerId: string): void;
 };
+
 export const usePeladaStore = create<Store>()(
   persist(
     (set, get) => ({
@@ -60,6 +63,34 @@ export const usePeladaStore = create<Store>()(
           queue: [],
         };
         set({ pelada: newPelada });
+      },
+      addPlayer: (name: string) => {
+        const { pelada } = get();
+        if (!pelada) return;
+
+        const newPlayer: Player = {
+          id: uuid(),
+          name,
+          status: pelada.sessionStarted ? "pending" : "available",
+        };
+
+        set({
+          pelada: {
+            ...pelada,
+            players: [...pelada.players, newPlayer],
+          },
+        });
+      },
+      removePlayer: (playerId: string) => {
+        const { pelada } = get();
+        if (!pelada) return;
+
+        set({
+          pelada: {
+            ...pelada,
+            players: pelada.players.filter((p) => p.id !== playerId),
+          },
+        });
       },
     }),
     { name: "pelada-storage" },

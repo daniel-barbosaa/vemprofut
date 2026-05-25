@@ -5,8 +5,8 @@ export type PlayerStatus =
   | "available"
   | "injured"
   | "out"
-  | "bench";
-
+  | "bench"
+  | "pending";
 export interface Player {
   id: string;
   name: string;
@@ -74,6 +74,7 @@ export interface Pelada {
   currentMatch?: Match;
   goalkeeper?: Player;
   recentSubstitutions?: Substitution[]; // Substituições recentes para mostrar feedback visual
+  sessionStarted?: boolean;
 }
 
 export type CreatePeladaDTO = {
