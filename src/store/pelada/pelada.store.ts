@@ -7,6 +7,7 @@ import type {
   Pelada,
   Player,
   PlayerStatus,
+  Substitution,
   Team,
 } from "./types";
 
@@ -22,6 +23,11 @@ type Store = {
   removeGoal(teamId: string): void;
   endMatch(): void;
   startNextMatch(): void;
+  manualSubstitution(
+    targetTeamId: string,
+    sourceTeamId: string,
+    playerId: string,
+  ): void;
 };
 
 export const usePeladaStore = create<Store>()(
@@ -525,6 +531,113 @@ export const usePeladaStore = create<Store>()(
               queue: updatedQueue,
               currentMatch: undefined,
               matches: updatedMatches,
+            },
+          };
+        });
+      },
+      manualSubstitution: (
+        targetTeamId: string,
+        sourceTeamId: string,
+        playerId: string,
+      ) => {
+        set((state) => {
+          const pelada = state.pelada;
+
+          if (!pelada) {
+            return state;
+          }
+
+          const targetTeamIndex = pelada.queue.findIndex(
+            (team) => team.id === targetTeamId,
+          );
+
+          const sourceTeamIndex = pelada.queue.findIndex(
+            (team) => team.id === sourceTeamId,
+          );
+
+          if (targetTeamIndex === -1 || sourceTeamIndex === -1) {
+            return state;
+          }
+
+          const updatedQueue = [...pelada.queue];
+
+          const targetTeam = {
+            ...updatedQueue[targetTeamIndex],
+          };
+
+          const sourceTeam = {
+            ...updatedQueue[sourceTeamIndex],
+          };
+
+          const playerIndex = sourceTeam.players.findIndex(
+            (player) => player.id === playerId,
+          );
+
+          if (playerIndex === -1) {
+            return state;
+          }
+
+          const player = {
+            ...sourceTeam.players[playerIndex],
+          };
+
+          const substitution: Substitution = {
+            outPlayerId: "",
+            outPlayerName: "",
+            inPlayerId: player.id,
+            inPlayerName: player.name,
+            fromTeamId: sourceTeam.id,
+            fromTeamName: sourceTeam.name,
+            toTeamId: targetTeam.id,
+            toTeamName: targetTeam.name,
+            timestamp: Date.now(),
+            reason: "other",
+          };
+
+          sourceTeam.players = sourceTeam.players.filter(
+            (player) => player.id !== playerId,
+          );
+
+          player.status = targetTeamIndex < 2 ? "playing" : "waiting";
+
+          targetTeam.players.push(player);
+
+          updatedQueue[targetTeamIndex] = targetTeam;
+          updatedQueue[sourceTeamIndex] = sourceTeam;
+
+          let updatedMatch = pelada.currentMatch;
+
+          if (updatedMatch) {
+            updatedMatch = {
+              ...updatedMatch,
+              substitutions: [
+                ...(updatedMatch.substitutions ?? []),
+                substitution,
+              ],
+            };
+
+            if (updatedMatch.teamA.id === targetTeamId) {
+              updatedMatch = {
+                ...updatedMatch,
+                teamA: targetTeam,
+              };
+            } else if (updatedMatch.teamB.id === targetTeamId) {
+              updatedMatch = {
+                ...updatedMatch,
+                teamB: targetTeam,
+              };
+            }
+          }
+
+          return {
+            pelada: {
+              ...pelada,
+              queue: updatedQueue,
+              currentMatch: updatedMatch,
+              recentSubstitutions: [
+                substitution,
+                ...(pelada.recentSubstitutions ?? []),
+              ].slice(0, 5),
             },
           };
         });

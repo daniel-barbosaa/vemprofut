@@ -1,3 +1,4 @@
+import { Theme } from "@radix-ui/themes";
 import { Toaster } from "react-hot-toast";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./router";
@@ -5,8 +6,10 @@ import { router } from "./router";
 export default function App() {
   return (
     <>
-      <RouterProvider router={router} />
-      <Toaster position="top-center" reverseOrder={false} />
+      <Theme>
+        <RouterProvider router={router} />
+        <Toaster position="top-center" reverseOrder={false} />
+      </Theme>
     </>
   );
 }

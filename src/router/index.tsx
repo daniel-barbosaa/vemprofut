@@ -4,6 +4,7 @@ import { Match } from "@/view/pages/match";
 import { MatchResult } from "@/view/pages/match-result";
 import { Players } from "@/view/pages/players";
 import { TeamDraw } from "@/view/pages/team-draw";
+import { Teams } from "@/view/pages/teams";
 import { Welcome } from "@/view/pages/welcome";
 import { createBrowserRouter } from "react-router-dom";
 
@@ -35,5 +36,9 @@ export const router = createBrowserRouter([
   {
     path: "/match/result",
     Component: MatchResult,
+  },
+  {
+    path: "/teams",
+    Component: Teams,
   },
 ]);

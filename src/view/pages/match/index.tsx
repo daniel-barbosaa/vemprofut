@@ -5,7 +5,7 @@ import { QueuePreview } from "./queue-preview";
 import { Score } from "./score";
 import { TeamReturnedNotice } from "./team-returned-notice";
 import { Timer } from "./timer";
-import { useMatch } from "./useMatch";
+import { useMatch } from "./use-match";
 
 export function Match() {
   const {
