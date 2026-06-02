@@ -1,5 +1,4 @@
 import { usePeladaStore } from "@/store/pelada/pelada.store";
-import { BottomNav } from "@/view/components/button-nav";
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { EmptyState } from "./empty-state";
@@ -34,8 +33,8 @@ export function Teams() {
   const restingTeam = pelada.queue.find((t) => t.isResting);
 
   return (
-    <div className="min-h-screen bg-zinc-950 pb-24">
-      <header className="mx-auto max-w-2xl p-6">
+    <>
+      <header>
         <div className="mb-6">
           <h1 className="mb-2 text-3xl font-bold text-white">Times Fixos</h1>
           <p className="text-zinc-500">
@@ -76,8 +75,6 @@ export function Teams() {
         isOpen={isManualSubstituteDialogOpen}
         onClose={() => setIsManualSubstituteDialogOpen(false)}
       />
-
-      <BottomNav />
-    </div>
+    </>
   );
 }

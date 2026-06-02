@@ -16,6 +16,7 @@ export function Players() {
   const [newPlayerName, setNewPlayerName] = useState("");
 
   const totalPlayers = pelada?.players.length || 0;
+  const hasDrawnTeams = Boolean(pelada?.queue.length);
 
   const handleAddPlayer = () => {
     if (!newPlayerName.trim()) return;
@@ -27,6 +28,11 @@ export function Players() {
   };
 
   const handleContinue = () => {
+    if (hasDrawnTeams) {
+      navigate("/home");
+      return;
+    }
+
     navigate("/draw");
   };
 
@@ -179,25 +185,25 @@ export function Players() {
         )}
       </AnimatePresence>
 
-      {totalPlayers < 10 && (
+      {!hasDrawnTeams && totalPlayers < 10 && (
         <p className="mb-3 text-center text-sm text-zinc-500">
           Faltam {10 - totalPlayers} jogadores para o sorteio mínimo
         </p>
       )}
-      {totalPlayers >= 1 && !pelada?.sessionStarted && (
+      {totalPlayers >= 1 && (
         <div className="fixed right-0 bottom-18 left-0 z-30 p-4">
           <div className="mx-auto max-w-2xl">
             <Button
               onClick={handleContinue}
-              disabled={totalPlayers < 10}
+              disabled={!hasDrawnTeams && totalPlayers < 10}
               className={cn(
                 "hover:bg-zinc-800",
-                totalPlayers >= 10
+                hasDrawnTeams || totalPlayers >= 10
                   ? `bg-emerald-500 text-white hover:bg-emerald-600 active:scale-[0.98]`
                   : `cursor-not-allowed bg-zinc-800 text-zinc-500`,
               )}
             >
-              Sortear Times
+              {hasDrawnTeams ? "Próxima Partida" : "Sortear Times"}
               <ArrowRight className="size-5" />
             </Button>
           </div>

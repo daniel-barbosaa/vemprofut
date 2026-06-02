@@ -1,6 +1,6 @@
 import { cn } from "@/app/utils/class-name-merger";
 import type { Match, Pelada, Team } from "@/store/pelada/types";
-import { Coffee } from "lucide-react";
+import { ArrowLeft, Coffee, HeartHandshake } from "lucide-react";
 import { motion } from "motion/react";
 
 interface InfoProps {
@@ -86,12 +86,12 @@ function DrawCard({ match, nextMatch }: DrawCardProps) {
     <AnimatedContainer>
       <div className="rounded-2xl border border-blue-700/30 bg-linear-to-br from-blue-900/30 to-blue-950/30 p-6">
         <div className="mb-4 flex items-center gap-3">
-          <div className="text-4xl">🤝</div>
+          <div className="flex size-12 items-center justify-center rounded-xl bg-blue-500/10">
+            <HeartHandshake className="size-6 text-blue-400" />
+          </div>
 
           <div>
-            <div className="text-lg font-bold text-blue-400">
-              Empate Detectado
-            </div>
+            <div className="text-lg font-bold text-blue-400">Empate</div>
 
             <div className="text-sm text-blue-400/70">
               Ambos os times saem da quadra
@@ -100,10 +100,10 @@ function DrawCard({ match, nextMatch }: DrawCardProps) {
         </div>
 
         <div className="space-y-2">
-          <div className="mb-2 text-xs font-semibold text-zinc-500 uppercase">
-            ⬅ Saíram
+          <div className="mb-2 flex items-center gap-2 text-xs font-semibold text-zinc-500 uppercase">
+            <ArrowLeft className="size-3.5" />
+            Saíram
           </div>
-
           <div className="grid grid-cols-2 gap-2">
             {[match!.teamA, match!.teamB].map((team) => (
               <div

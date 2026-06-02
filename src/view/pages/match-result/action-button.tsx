@@ -12,8 +12,8 @@ export function ActionButton({ handleNextMatch }: ActionButtonProps) {
       onClick={handleNextMatch}
       className="flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 py-6 text-lg font-bold text-white shadow-lg shadow-emerald-500/20 transition-all hover:bg-emerald-600 active:scale-95"
     >
-      Próxima Partida
-      <ArrowRight className="h-6 w-6" />
+      Continuar
+      <ArrowRight className="size-6" />
     </motion.button>
   );
 }
