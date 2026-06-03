@@ -7,4 +7,5 @@ export const paths = {
   draw: "/draw",
   match: "/match",
   matchResult: "/match/result",
+  history: "/history",
 } as const;

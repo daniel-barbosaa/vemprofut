@@ -1,6 +1,7 @@
 import { MatchInProgressGuard } from "@/router/match-in-progress-guard";
 import { AppLayout } from "@/view/layout/app-layout";
 import { CreatePelada } from "@/view/pages/create-pelada";
+import { History } from "@/view/pages/history";
 import { Home } from "@/view/pages/home";
 import { Match } from "@/view/pages/match";
 import { MatchResult } from "@/view/pages/match-result";
@@ -23,6 +24,7 @@ export function Router() {
 
         <Route element={<AppLayout />}>
           <Route element={<Teams />} path={paths.teams} />
+          <Route element={<History />} path={paths.history} />
         </Route>
 
         <Route element={<MatchInProgressGuard />}>

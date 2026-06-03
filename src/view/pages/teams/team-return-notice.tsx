@@ -12,7 +12,7 @@ export function TeamReturnNotice({ pelada }: TeamReturnNoticeProps) {
       ? pelada.queue[1]
       : null;
 
-  if (returnedTeam) return null;
+  if (!returnedTeam) return null;
 
   return (
     <motion.div
