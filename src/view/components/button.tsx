@@ -1,9 +1,16 @@
 import { cn } from "@/app/utils/class-name-merger";
+import { Loader2 } from "lucide-react";
 import type { ComponentProps } from "react";
 interface ButtonProps extends ComponentProps<"button"> {
   className: string;
+  isLoading?: boolean;
 }
-export function Button({ className, children, ...props }: ButtonProps) {
+export function Button({
+  className,
+  children,
+  isLoading,
+  ...props
+}: ButtonProps) {
   return (
     <button
       {...props}
@@ -12,7 +19,11 @@ export function Button({ className, children, ...props }: ButtonProps) {
         className,
       )}
     >
-      {children}
+      {isLoading ? (
+        <Loader2 className="size-5 animate-spin text-emerald-400" />
+      ) : (
+        <>{children}</>
+      )}
     </button>
   );
 }

@@ -1,5 +1,5 @@
 import { usePeladaStore } from "@/store/pelada/pelada.store";
-import { BottomNav } from "@/view/components/button-nav";
+import { BottomNav } from "@/view/components/botton-nav";
 import { Play, Trophy, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 

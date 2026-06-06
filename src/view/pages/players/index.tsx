@@ -1,9 +1,10 @@
 import { cn } from "@/app/utils/class-name-merger";
 import { usePeladaStore } from "@/store/pelada/pelada.store";
+import { BottomSheet } from "@/view/components/bottom-sheet";
+import { BottomNav } from "@/view/components/botton-nav";
 import { Button } from "@/view/components/button";
-import { BottomNav } from "@/view/components/button-nav";
-import { ArrowRight, Plus, Trash2, User, X } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { ArrowRight, Plus, Trash2, User } from "lucide-react";
+import { motion } from "motion/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -11,7 +12,7 @@ export function Players() {
   const { addPlayer, pelada, removePlayer } = usePeladaStore();
   const navigate = useNavigate();
 
-  const [showAddPlayer, setShowAddPlayer] = useState(false);
+  const [show, setShow] = useState(false);
 
   const [newPlayerName, setNewPlayerName] = useState("");
 
@@ -24,7 +25,7 @@ export function Players() {
     addPlayer(newPlayerName.trim());
 
     setNewPlayerName("");
-    setShowAddPlayer(false);
+    setShow(false);
   };
 
   const handleContinue = () => {
@@ -48,7 +49,7 @@ export function Players() {
 
           {totalPlayers > 0 && (
             <button
-              onClick={() => setShowAddPlayer(true)}
+              onClick={() => setShow(true)}
               className="flex size-12 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-400 ring-1 ring-emerald-500/20 transition-all will-change-transform hover:scale-105 hover:bg-emerald-500/20 active:scale-95"
             >
               <Plus className="size-5" />
@@ -58,7 +59,7 @@ export function Players() {
 
         {totalPlayers === 0 && (
           <button
-            onClick={() => setShowAddPlayer(true)}
+            onClick={() => setShow(true)}
             className="flex w-full flex-col items-center justify-center rounded-3xl border border-zinc-800 bg-zinc-900/50 p-10 text-center transition-all hover:border-emerald-500/40 hover:bg-zinc-900"
           >
             <div className="mb-4 flex size-16 items-center justify-center rounded-full bg-zinc-800">
@@ -120,70 +121,30 @@ export function Players() {
         )}
       </div>
 
-      <AnimatePresence>
-        {showAddPlayer && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => {
-                setShowAddPlayer(false);
-                setNewPlayerName("");
-              }}
-              className="fixed inset-0 z-40 bg-black/60"
-            />
+      <BottomSheet
+        open={show}
+        onClose={() => setShow(false)}
+        title="Adicionar Jogador"
+      >
+        <div className="flex flex-col gap-3">
+          <input
+            type="text"
+            value={newPlayerName}
+            onChange={(e) => setNewPlayerName(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleAddPlayer()}
+            placeholder="Nome do jogador"
+            autoFocus
+            className="rounded-2xl border border-zinc-700 bg-zinc-800 px-4 py-4 text-lg text-white transition-colors focus:border-emerald-500 focus:outline-none"
+          />
 
-            <motion.div
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "100%" }}
-              transition={{
-                type: "spring",
-                damping: 24,
-              }}
-              className="fixed right-0 bottom-0 left-0 z-50 rounded-t-3xl border-t border-zinc-800 bg-zinc-900 p-6"
-            >
-              <div className="mx-auto max-w-2xl">
-                <div className="mb-5 flex items-center justify-between">
-                  <h3 className="text-xl font-semibold text-white">
-                    Adicionar Jogador
-                  </h3>
-
-                  <button
-                    onClick={() => {
-                      setShowAddPlayer(false);
-                      setNewPlayerName("");
-                    }}
-                    className="rounded-full p-2 text-zinc-400 transition-colors hover:bg-zinc-800"
-                  >
-                    <X className="size-5" />
-                  </button>
-                </div>
-
-                <div className="flex flex-col gap-3">
-                  <input
-                    type="text"
-                    value={newPlayerName}
-                    onChange={(e) => setNewPlayerName(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && handleAddPlayer()}
-                    placeholder="Nome do jogador"
-                    autoFocus
-                    className="rounded-2xl border border-zinc-700 bg-zinc-800 px-4 py-4 text-lg text-white transition-colors focus:border-emerald-500 focus:outline-none"
-                  />
-
-                  <button
-                    onClick={handleAddPlayer}
-                    className="flex h-14 items-center justify-center rounded-2xl bg-emerald-500 font-semibold text-white transition-colors hover:bg-emerald-600"
-                  >
-                    Adicionar
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+          <button
+            onClick={handleAddPlayer}
+            className="flex h-14 items-center justify-center rounded-2xl bg-emerald-500 font-semibold text-white transition-colors hover:bg-emerald-600"
+          >
+            Adicionar
+          </button>
+        </div>
+      </BottomSheet>
 
       {!hasDrawnTeams && totalPlayers < 10 && (
         <p className="mb-3 text-center text-sm text-zinc-500">
@@ -199,8 +160,8 @@ export function Players() {
               className={cn(
                 "hover:bg-zinc-800",
                 hasDrawnTeams || totalPlayers >= 10
-                  ? `bg-emerald-500 text-white hover:bg-emerald-600 active:scale-[0.98]`
-                  : `cursor-not-allowed bg-zinc-800 text-zinc-500`,
+                  ? "bg-emerald-500 text-white hover:bg-emerald-600 active:scale-[0.98]"
+                  : "cursor-not-allowed bg-zinc-800 text-zinc-500",
               )}
             >
               {hasDrawnTeams ? "Próxima Partida" : "Sortear Times"}

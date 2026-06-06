@@ -2,8 +2,11 @@ import GoogleIcon from "@/assets/google.svg";
 import { Button } from "@/view/components/button";
 import { motion } from "motion/react";
 import { Link } from "react-router";
+import { useSignIn } from "./use-sign-in";
 
 export function SignIn() {
+  const { signInWithGoogle } = useSignIn();
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-950 px-5">
       <motion.div
@@ -37,9 +40,10 @@ export function SignIn() {
         </div>
 
         <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
-          <button
+          <Button
             type="button"
-            className="flex h-12 w-full items-center justify-center gap-3 rounded-xl border border-zinc-800 bg-zinc-900 font-medium text-zinc-100 transition-all hover:border-zinc-700 hover:bg-zinc-800"
+            className="flex h-12 w-full items-center justify-center rounded-xl border border-zinc-800 bg-zinc-900 font-medium text-zinc-100 transition-all hover:border-zinc-700 hover:bg-zinc-800"
+            onClick={signInWithGoogle}
           >
             <img
               src={GoogleIcon}
@@ -48,7 +52,7 @@ export function SignIn() {
               className="size-5 shrink-0"
             />
             Continuar com Google
-          </button>
+          </Button>
 
           <div className="my-6 flex items-center gap-4">
             <div className="h-px flex-1 bg-zinc-800" />

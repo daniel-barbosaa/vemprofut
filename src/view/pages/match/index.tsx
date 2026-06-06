@@ -1,4 +1,4 @@
-import { BottomNav } from "../../components/button-nav";
+import { BottomNav } from "../../components/botton-nav";
 import { ControlButtons } from "./control-buttons";
 import { EmptyMatchState } from "./empty-match-state";
 import { QueuePreview } from "./queue-preview";

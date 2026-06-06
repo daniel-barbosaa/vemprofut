@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import { BottomNav } from "../components/button-nav";
+import { BottomNav } from "../components/botton-nav";
 
 type AppLayoutProps = {
   showBottomNav?: boolean;

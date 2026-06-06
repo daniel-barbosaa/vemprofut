@@ -17,6 +17,7 @@
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
     "@radix-ui/themes": "^3.3.0",
+    "@supabase/supabase-js": "^2.107.0",
     "@tailwindcss/vite": "^4.3.0",
     "canvas-confetti": "^1.9.4",
     "clsx": "^2.1.1",
