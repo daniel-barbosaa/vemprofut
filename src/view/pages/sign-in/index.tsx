@@ -1,11 +1,14 @@
+import { cn } from "@/app/utils/class-name-merger";
 import GoogleIcon from "@/assets/google.svg";
 import { Button } from "@/view/components/button";
+import { CircleAlert } from "lucide-react";
 import { motion } from "motion/react";
 import { Link } from "react-router";
-import { useSignIn } from "./use-sign-in";
+import { useSignInController } from "./use-sign-in-controller";
 
 export function SignIn() {
-  const { signInWithGoogle } = useSignIn();
+  const { signInWithGoogle, handleSubmit, register, errors } =
+    useSignInController();
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-950 px-5">
@@ -60,7 +63,7 @@ export function SignIn() {
             <div className="h-px flex-1 bg-zinc-800" />
           </div>
 
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
               <label className="mb-2 block text-sm font-medium text-zinc-300">
                 Email
@@ -69,8 +72,20 @@ export function SignIn() {
               <input
                 type="email"
                 placeholder="Digite seu email"
-                className="h-12 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 text-white transition-all outline-none placeholder:text-zinc-600 focus:border-emerald-500"
+                className={cn(
+                  "h-12 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 text-white transition-all outline-none placeholder:text-zinc-600 focus:border-emerald-500",
+                  errors.email
+                    ? "border-red-500/60 focus:border-red-500"
+                    : "border-zinc-800 focus:border-emerald-500",
+                )}
+                {...register("email")}
               />
+              {errors.email?.message && (
+                <p className="mt-2 flex items-center gap-1 text-xs text-red-400">
+                  <CircleAlert className="size-4" />
+                  {errors.email?.message}
+                </p>
+              )}
             </div>
 
             <div>
@@ -90,8 +105,20 @@ export function SignIn() {
               <input
                 type="password"
                 placeholder="Digite sua senha"
-                className="h-12 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 text-white transition-all outline-none placeholder:text-zinc-600 focus:border-emerald-500"
+                className={cn(
+                  "h-12 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 text-white transition-all outline-none placeholder:text-zinc-600 focus:border-emerald-500",
+                  errors.password
+                    ? "border-red-500/60 focus:border-red-500"
+                    : "border-zinc-800 focus:border-emerald-500",
+                )}
+                {...register("password")}
               />
+              {errors.password?.message && (
+                <p className="mt-2 flex items-center gap-1 text-xs text-red-400">
+                  <CircleAlert className="size-4" />
+                  {errors.password?.message}
+                </p>
+              )}
             </div>
 
             <Button type="submit" className="h-12 rounded-xl">
