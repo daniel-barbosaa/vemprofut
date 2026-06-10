@@ -51,18 +51,16 @@ function SummaryActions({ summaryRef }: SummaryActionsProps) {
         await navigator.share({
           files: [file],
           title: "Resumo da Pelada",
-          text: "Olha o resumo do jogo",
+          text: "Resumo do jogo",
         });
         return;
       }
     } catch (e) {
-      console.log(e);
+      console.log("Share failed:", e);
     }
 
-    const link = document.createElement("a");
-    link.download = file.name;
-    link.href = dataUrl;
-    link.click();
+    // Fallback de segurança, caso a opçao acima falhar.
+    downloadImage(dataUrl);
   }
 
   return (
@@ -136,7 +134,9 @@ export function SessionSummary() {
             <div className="relative z-10">
               <div className="text-xl">⚽</div>
 
-              <h1 className="text-base font-bold text-white">PeladaPro</h1>
+              <h1 className="text-base font-bold text-white capitalize">
+                {summary.pelada.name}
+              </h1>
 
               <p className="text-[10px] font-semibold tracking-wider text-emerald-100 uppercase">
                 Resumo da Resenha
