@@ -1,39 +1,13 @@
 import { ArrowLeft, Calendar, FileText, Target, Trophy } from "lucide-react";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router";
-
-interface SummaryItem {
-  id: string;
-  name: string;
-  date: string;
-  champion: string;
-  matches: number;
-  goals: number;
-}
-const mockSummaries: SummaryItem[] = [
-  {
-    id: "1",
-    name: "Pelada de Domingo",
-    date: "2026-06-02",
-    champion: "Time B",
-    matches: 14,
-    goals: 43,
-  },
-  {
-    id: "2",
-    name: "Resenha da Galera",
-    date: "2026-05-30",
-    champion: "Time A",
-    matches: 18,
-    goals: 52,
-  },
-];
+import { useSummary } from "./use-summary";
 
 export function Summaries() {
   const navigate = useNavigate();
-  const summaries = mockSummaries;
+  const { summariesBuilt } = useSummary();
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString: number) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("pt-BR", {
       day: "2-digit",
@@ -64,7 +38,7 @@ export function Summaries() {
           </div>
         </div>
 
-        {summaries.length === 0 ? (
+        {summariesBuilt.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -83,7 +57,7 @@ export function Summaries() {
           </motion.div>
         ) : (
           <div className="space-y-4">
-            {summaries.map((summary, index) => (
+            {summariesBuilt.map((summary, index) => (
               <motion.div
                 key={summary.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -93,11 +67,11 @@ export function Summaries() {
               >
                 <div className="mb-3 flex items-center gap-2 text-sm text-zinc-400">
                   <Calendar className="size-4" />
-                  <span>{formatDate(summary.date)}</span>
+                  <span>{formatDate(summary.pelada.createdAt)}</span>
                 </div>
 
                 <h3 className="mb-3 text-xl font-bold text-white">
-                  {summary.name}
+                  {summary.pelada.name}
                 </h3>
 
                 <div className="mb-4 rounded-xl border border-yellow-700/30 bg-linear-to-r from-yellow-900/20 to-amber-900/20 p-3">
@@ -108,7 +82,7 @@ export function Summaries() {
                         Campeão
                       </div>
                       <div className="font-bold text-white">
-                        {summary.champion}
+                        {summary.stats?.champion.name}
                       </div>
                     </div>
                   </div>
@@ -121,7 +95,7 @@ export function Summaries() {
                     </div>
                     <div>
                       <div className="font-bold text-white">
-                        {summary.matches}
+                        {summary.stats?.matchesCount}
                       </div>
                       <div className="text-xs text-zinc-500">partidas</div>
                     </div>
@@ -135,7 +109,8 @@ export function Summaries() {
                     </div>
                     <div>
                       <div className="font-bold text-white">
-                        {summary.goals}
+                        {summary.stats?.goals}
+                        10
                       </div>
                       <div className="text-xs text-zinc-500">gols</div>
                     </div>
@@ -143,7 +118,13 @@ export function Summaries() {
                 </div>
 
                 <button
-                  onClick={() => navigate(`/summaries/${"1"}`)}
+                  onClick={() =>
+                    navigate(`/summaries/${summary.id}`, {
+                      state: {
+                        summary,
+                      },
+                    })
+                  }
                   className="flex w-full items-center justify-center gap-2 rounded-lg border border-emerald-600/30 bg-emerald-500/20 px-4 py-2.5 text-sm font-semibold text-emerald-400 transition-all hover:bg-emerald-500/30"
                 >
                   <FileText className="size-4" />

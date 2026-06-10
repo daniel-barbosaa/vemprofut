@@ -1,9 +1,8 @@
+import type { Pelada } from "@/store/pelada/types";
 import { Share2 } from "lucide-react";
 import { motion } from "motion/react";
-import { useEffect } from "react";
-import { useNavigate, useParams } from "react-router";
-import { useSummary } from "./use-summary";
-import type { Summary } from "./utils/types";
+import { Navigate, useLocation, useNavigate, useParams } from "react-router";
+import type { SummaryItem } from "./utils/types";
 
 function SummaryActions() {
   const navigate = useNavigate();
@@ -30,103 +29,29 @@ function SummaryActions() {
   );
 }
 
-const mockSummary: Summary = {
-  champion: {
-    id: "team-1",
-    name: "Time Azul",
-    wins: 8,
-    winRate: 73,
-    players: [
-      {
-        id: "1",
-        name: "Daniel",
-        status: "playing",
-      },
-      {
-        id: "2",
-        name: "João",
-        status: "playing",
-      },
-      {
-        id: "3",
-        name: "Pedro",
-        status: "playing",
-      },
-      {
-        id: "4",
-        name: "Pedro",
-        status: "playing",
-      },
-      {
-        id: "5",
-        name: "Pedro",
-        status: "playing",
-      },
-    ],
-  },
-
-  bestStreak: {
-    id: "2",
-    name: "Time Verde",
-    maxStreak: 1,
-  },
-
-  worstTeam: {
-    id: "team-4",
-    name: "Time Vermelho",
-    wins: 1,
-    winRate: 10,
-  },
-
-  balancedMatch: {
-    id: "match-1",
-    teamA: {
-      id: "1",
-      name: "Time Azul",
-      score: 5,
-      players: [],
-      consecutiveWins: 0,
-    },
-    teamB: {
-      id: "2",
-      name: "Time Verde",
-      score: 4,
-      players: [],
-      consecutiveWins: 0,
-    },
-    startTime: Date.now(),
-    duration: 600,
-    goalLimit: 5,
-    isActive: false,
-  },
-  createdAt: new Date().toISOString(),
+type SummaryCard = {
+  id: string;
+  pelada: Pelada;
+  stats: SummaryItem;
 };
 
 export function SessionSummary() {
-  const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
+  const { state } = useLocation();
 
-  const localSummary = useSummary();
-
-  const summary = id ? mockSummary : localSummary;
-
-  useEffect(() => {
-    if (id) return;
-
-    if (!summary) {
-      navigate("/home");
-    }
-  }, [summary, navigate, id]);
+  const summary = state?.summary as SummaryCard | undefined;
 
   if (!summary) {
-    return null;
+    return <Navigate to="/summaries" />;
   }
 
-  const sessionDate = new Date(summary.createdAt).toLocaleDateString("pt-BR", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-  });
+  const sessionDate = new Date(summary.pelada.createdAt).toLocaleDateString(
+    "pt-BR",
+    {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    },
+  );
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-950 p-4">
@@ -174,13 +99,13 @@ export function SessionSummary() {
                 </div>
 
                 <h3 className="mb-2 truncate text-2xl font-black text-white">
-                  {summary.champion.name}
+                  {summary.stats.champion.name}
                 </h3>
 
                 <div className="flex items-center justify-center gap-3">
                   <div>
                     <div className="text-2xl font-black text-yellow-400">
-                      {summary.champion.wins}
+                      {summary.stats.champion.wins}
                     </div>
 
                     <div className="text-[10px] font-bold text-yellow-200/70">
@@ -192,7 +117,7 @@ export function SessionSummary() {
 
                   <div>
                     <div className="text-2xl font-black text-yellow-400">
-                      {summary.champion.winRate}%
+                      {summary.stats.champion.winRate}%
                     </div>
 
                     <div className="text-[10px] font-bold text-yellow-200/70">
@@ -203,8 +128,8 @@ export function SessionSummary() {
               </div>
             </motion.div>
 
-            {summary.bestStreak?.maxStreak > 0 &&
-              summary.bestStreak?.id !== summary.champion.id && (
+            {summary.stats.bestStreak?.maxStreak > 0 &&
+              summary.stats.bestStreak?.id !== summary.stats.champion.id && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -215,12 +140,12 @@ export function SessionSummary() {
                     🔥 Rei da Sequência
                   </div>
                   <div className="text-sm font-bold text-white">
-                    {summary.bestStreak?.name}
+                    {summary.stats.bestStreak?.name}
                   </div>
                   <div className="mt-0.5 text-xs text-orange-300">
                     Atingiu o limite de 2 vitórias seguidas{" "}
-                    {summary.bestStreak?.maxStreak}{" "}
-                    {summary.bestStreak?.maxStreak > 1 ? "vezes" : "vez"}
+                    {summary.stats.bestStreak?.maxStreak}{" "}
+                    {summary.stats.bestStreak?.maxStreak > 1 ? "vezes" : "vez"}
                   </div>
                 </motion.div>
               )}
@@ -235,23 +160,25 @@ export function SessionSummary() {
                 🥉 Elenco Campeão
               </div>
               <div className="grid grid-cols-2 gap-1.5">
-                {summary.champion.players.slice(0, 6).map((player, index) => (
-                  <div
-                    key={player.id}
-                    className="flex items-center gap-1.5 text-xs font-medium text-white"
-                  >
-                    <div className="flex size-4 shrink-0 items-center justify-center rounded-full bg-emerald-500/20">
-                      <span className="text-[10px] font-bold text-emerald-400">
-                        {index + 1}
-                      </span>
+                {summary.stats.champion.players
+                  .slice(0, 6)
+                  .map((player, index) => (
+                    <div
+                      key={player.id}
+                      className="flex items-center gap-1.5 text-xs font-medium text-white"
+                    >
+                      <div className="flex size-4 shrink-0 items-center justify-center rounded-full bg-emerald-500/20">
+                        <span className="text-[10px] font-bold text-emerald-400">
+                          {index + 1}
+                        </span>
+                      </div>
+                      <span className="truncate">{player.name}</span>
                     </div>
-                    <span className="truncate">{player.name}</span>
-                  </div>
-                ))}
+                  ))}
               </div>
             </motion.div>
 
-            {summary.balancedMatch && (
+            {summary.stats.balancedMatch && (
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -264,27 +191,27 @@ export function SessionSummary() {
                 <div className="flex items-center justify-center gap-3">
                   <div className="flex-1 text-center">
                     <div className="mb-1 truncate text-xs font-bold text-white">
-                      {summary.balancedMatch.teamA.name}
+                      {summary.stats.balancedMatch.teamA.name}
                     </div>
                     <div className="text-2xl font-black text-blue-400">
-                      {summary.balancedMatch.teamA.score}
+                      {summary.stats.balancedMatch.teamA.score}
                     </div>
                   </div>
                   <div className="text-xl font-bold text-zinc-600">×</div>
                   <div className="flex-1 text-center">
                     <div className="mb-1 truncate text-xs font-bold text-white">
-                      {summary.balancedMatch.teamB.name}
+                      {summary.stats.balancedMatch.teamB.name}
                     </div>
                     <div className="text-2xl font-black text-blue-400">
-                      {summary.balancedMatch.teamB.score}
+                      {summary.stats.balancedMatch.teamB.score}
                     </div>
                   </div>
                 </div>
               </motion.div>
             )}
 
-            {summary.worstTeam &&
-              summary.worstTeam.id !== summary.champion.id && (
+            {summary.stats.worstTeam &&
+              summary.stats.worstTeam.id !== summary.stats.champion.id && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -296,12 +223,12 @@ export function SessionSummary() {
                   </div>
                   <div className="flex items-center justify-between">
                     <div className="text-sm font-bold text-white">
-                      {summary.worstTeam.name}
+                      {summary.stats.worstTeam.name}
                     </div>
                     <div className="text-xs text-red-400">
-                      {summary.worstTeam.wins} vitória
-                      {summary.worstTeam.wins !== 1 ? "s" : ""} •{" "}
-                      {summary.worstTeam.winRate}%
+                      {summary.stats.worstTeam.wins} vitória
+                      {summary.stats.worstTeam.wins !== 1 ? "s" : ""} •{" "}
+                      {summary.stats.worstTeam.winRate}%
                     </div>
                   </div>
                 </motion.div>

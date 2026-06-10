@@ -1,7 +1,7 @@
 import type { Pelada } from "@/store/pelada/types";
-import type { Summary } from "./types";
+import type { SummaryItem } from "./types";
 
-export function buildSummary(pelada: Pelada): Summary | null {
+export function buildSummary(pelada: Pelada): SummaryItem | null {
   if (!pelada.matches.length) {
     return null;
   }
@@ -124,6 +124,11 @@ export function buildSummary(pelada: Pelada): Summary | null {
 
   return {
     createdAt: pelada.createdAt.toString(),
+    matchesCount: pelada.matches.length,
+    goals: pelada.matches.reduce(
+      (total, match) => total + match.teamA.score + match.teamB.score,
+      0,
+    ),
     champion,
     bestStreak,
     worstTeam,

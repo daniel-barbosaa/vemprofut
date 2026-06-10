@@ -2,10 +2,12 @@ import { usePeladaStore } from "@/store/pelada/pelada.store";
 import { Clock, History, Play, Plus, Trophy, Users } from "lucide-react";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router";
+import { useHomeController } from "./use-home-controller";
 
 export function Home() {
   const navigate = useNavigate();
-  const { pelada, resetPelada, startMatch, startNextMatch } = usePeladaStore();
+  const { pelada, startMatch, startNextMatch } = usePeladaStore();
+  const { finishPelada } = useHomeController();
   const isMatchActive = pelada?.currentMatch?.isActive ?? false;
   const hasFinishedMatchPendingQueueUpdate = Boolean(
     pelada?.currentMatch && !pelada.currentMatch.isActive,
@@ -109,10 +111,14 @@ export function Home() {
               )}
 
               <button
-                onClick={() => {
-                  if (confirm("Tem certeza que deseja encerrar esta pelada?")) {
-                    resetPelada();
-                  }
+                onClick={async () => {
+                  const confirmed = confirm(
+                    "Tem certeza que deseja encerrar esta pelada?",
+                  );
+
+                  if (!confirmed) return;
+
+                  await finishPelada();
                 }}
                 className="w-full rounded-xl bg-zinc-800 py-3 font-medium text-zinc-300 transition-all hover:bg-zinc-700"
               >

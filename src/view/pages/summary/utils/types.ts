@@ -1,6 +1,6 @@
 import type { Match, Player } from "@/store/pelada/types";
 
-export interface Summary {
+export interface SummaryItem {
   champion: {
     id: string;
     name: string;
@@ -19,6 +19,8 @@ export interface Summary {
     wins: number;
     winRate: number;
   };
+  matchesCount: number;
+  goals: number;
   balancedMatch?: Match;
   createdAt: string;
 }

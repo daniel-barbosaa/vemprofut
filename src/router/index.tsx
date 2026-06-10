@@ -2,7 +2,7 @@ import { MatchInProgressGuard } from "@/router/match-in-progress-guard";
 import { AppLayout } from "@/view/layout/app-layout";
 import { CreatePelada } from "@/view/pages/create-pelada";
 import { History } from "@/view/pages/history";
-import { Home } from "@/view/pages/home";
+import { Home } from "@/view/pages/home/home";
 import { Match } from "@/view/pages/match";
 import { MatchResult } from "@/view/pages/match-result";
 import { Players } from "@/view/pages/players";
