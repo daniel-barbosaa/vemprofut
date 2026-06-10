@@ -1,22 +1,86 @@
 import type { Pelada } from "@/store/pelada/types";
-import { Share2 } from "lucide-react";
+import { toPng } from "html-to-image";
+import { Download, Share2 } from "lucide-react";
 import { motion } from "motion/react";
+import { useRef, type RefObject } from "react";
 import { Navigate, useLocation, useNavigate, useParams } from "react-router";
 import type { SummaryItem } from "./utils/types";
 
-function SummaryActions() {
+interface SummaryActionsProps {
+  summaryRef: RefObject<HTMLDivElement | null>;
+}
+
+function SummaryActions({ summaryRef }: SummaryActionsProps) {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
+
+  async function generateImage() {
+    if (!summaryRef.current) return;
+
+    return await toPng(summaryRef.current, {
+      cacheBust: true,
+      pixelRatio: 2,
+    });
+  }
+
+  function downloadImage(dataUrl: string) {
+    const link = document.createElement("a");
+    link.download = `pelada-${Date.now()}.png`;
+    link.href = dataUrl;
+    link.click();
+  }
+
+  async function handleSave() {
+    const dataUrl = await generateImage();
+    if (!dataUrl) return;
+
+    downloadImage(dataUrl);
+  }
+
+  async function handleShare() {
+    const dataUrl = await generateImage();
+    if (!dataUrl) return;
+
+    const blob = await (await fetch(dataUrl)).blob();
+    const file = new File([blob], "resumo-pelada.png", {
+      type: "image/png",
+    });
+
+    try {
+      if (navigator.canShare?.({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: "Resumo da Pelada",
+          text: "Olha o resumo do jogo",
+        });
+        return;
+      }
+    } catch (e) {
+      console.log(e);
+    }
+
+    const link = document.createElement("a");
+    link.download = file.name;
+    link.href = dataUrl;
+    link.click();
+  }
+
   return (
-    <div className="mt-4 space-y-2">
+    <div className="mt-6 space-y-3">
       <button
-        onClick={() => {
-          alert("Funcionalidade de compartilhamento em desenvolvimento");
-        }}
+        onClick={handleShare}
         className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 py-3 text-sm font-bold text-white transition-all hover:bg-emerald-600 active:scale-95"
       >
         <Share2 className="size-4" />
-        Compartilhar Resumo
+        Compartilhar
+      </button>
+
+      <button
+        onClick={handleSave}
+        className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 text-sm font-bold text-white transition-all hover:bg-blue-700 active:scale-95"
+      >
+        <Download className="size-4" />
+        Salvar imagem
       </button>
 
       <button
@@ -37,6 +101,7 @@ type SummaryCard = {
 
 export function SessionSummary() {
   const { state } = useLocation();
+  const summaryRef = useRef<HTMLDivElement>(null);
 
   const summary = state?.summary as SummaryCard | undefined;
 
@@ -57,6 +122,7 @@ export function SessionSummary() {
     <div className="flex min-h-screen items-center justify-center bg-zinc-950 p-4">
       <div className="w-full max-w-md">
         <motion.div
+          ref={summaryRef}
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           id="pelada-summary-card"
@@ -242,7 +308,7 @@ export function SessionSummary() {
           </div>
         </motion.div>
 
-        <SummaryActions />
+        <SummaryActions summaryRef={summaryRef} />
       </div>
     </div>
   );
