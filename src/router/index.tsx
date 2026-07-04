@@ -12,7 +12,6 @@ import { Summaries } from "@/view/pages/summary";
 import { SessionSummary } from "@/view/pages/summary/session";
 import { TeamDraw } from "@/view/pages/team-draw";
 import { Teams } from "@/view/pages/teams";
-import { Welcome } from "@/view/pages/welcome";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AuthGuard } from "./auth-guard";
 import { paths } from "./paths";
@@ -22,7 +21,6 @@ export function Router() {
     <BrowserRouter>
       <Routes>
         <Route element={<AuthGuard isPrivate />}>
-          <Route element={<Welcome />} path={paths.welcome} />
           <Route element={<AppLayout showBottomNav={false} />}>
             <Route element={<Home />} path={paths.home} />
           </Route>
