@@ -21,7 +21,7 @@ export function Router() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route element={<AuthGuard isPrivate={false} />}>
+        <Route element={<AuthGuard isPrivate />}>
           <Route element={<Welcome />} path={paths.welcome} />
           <Route element={<AppLayout showBottomNav={false} />}>
             <Route element={<Home />} path={paths.home} />

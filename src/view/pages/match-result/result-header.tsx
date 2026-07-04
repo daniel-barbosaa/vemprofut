@@ -1,14 +1,20 @@
+import { cn } from "@/app/utils/class-name-merger";
 import type { Pelada, Team } from "@/store/pelada/types";
-import { Trophy } from "lucide-react";
 import { motion } from "motion/react";
 
 interface ResultHeaderProps {
   isDraw: boolean;
   winner: Team | null;
   pelada: Pelada | null;
+  collapsed: boolean;
 }
 
-export function ResultHeader({ isDraw, winner, pelada }: ResultHeaderProps) {
+export function ResultHeader({
+  isDraw,
+  winner,
+  pelada,
+  collapsed,
+}: ResultHeaderProps) {
   return (
     <motion.div
       initial={{ scale: 0.8, opacity: 0 }}
@@ -16,10 +22,14 @@ export function ResultHeader({ isDraw, winner, pelada }: ResultHeaderProps) {
       transition={{ duration: 0.5 }}
       className="mb-8 text-center"
     >
-      <div className="mb-4 inline-flex size-24 items-center justify-center rounded-full bg-emerald-500/20">
-        <Trophy className="size-12 text-emerald-400" />
-      </div>
-      <h1 className="mb-2 text-3xl font-bold text-white">
+      <h1
+        className={cn(
+          "font-medium text-white transition-all duration-300",
+          collapsed
+            ? "-translate-y-4 scale-95 opacity-0"
+            : "translate-y-0 text-2xl opacity-100",
+        )}
+      >
         {isDraw ? "Empate!" : "Partida Finalizada!"}
       </h1>
       <p className="text-zinc-500">

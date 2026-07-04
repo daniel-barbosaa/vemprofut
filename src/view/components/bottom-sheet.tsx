@@ -1,6 +1,7 @@
 import { X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import type { ReactNode } from "react";
+import { createPortal } from "react-dom";
 
 interface BottomSheetProps {
   open: boolean;
@@ -15,7 +16,7 @@ export function BottomSheet({
   children,
   onClose,
 }: BottomSheetProps) {
-  return (
+  return createPortal(
     <AnimatePresence>
       {open && (
         <>
@@ -23,18 +24,17 @@ export function BottomSheet({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.08 }}
             onClick={onClose}
             className="fixed inset-0 z-40 bg-black/60"
           />
 
           <motion.div
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 30, opacity: 0 }}
+            initial={{ y: "100%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "100%" }}
             transition={{
-              duration: 0.18,
-              ease: "easeOut",
+              duration: 0.25,
+              ease: [0.25, 0.8, 0.25, 1],
             }}
             className="fixed right-0 bottom-0 left-0 z-50 rounded-t-3xl border-t border-zinc-800 bg-zinc-900"
           >
@@ -44,7 +44,7 @@ export function BottomSheet({
 
                 <button
                   onClick={onClose}
-                  className="rounded-full p-2 text-zinc-400 transition-colors hover:bg-zinc-800"
+                  className="rounded-full p-2 text-zinc-400 hover:bg-zinc-800"
                 >
                   <X className="size-5" />
                 </button>
@@ -55,6 +55,7 @@ export function BottomSheet({
           </motion.div>
         </>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body,
   );
 }

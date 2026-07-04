@@ -1,4 +1,7 @@
-import { ArrowLeft, Calendar, FileText, Target, Trophy } from "lucide-react";
+import { useCollapsedHeader } from "@/app/hooks/use-collapsed-header";
+import { cn } from "@/app/utils/class-name-merger";
+import { TopBar } from "@/view/components/top-bar";
+import { Calendar, FileText, Target, Trophy } from "lucide-react";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router";
 import { useSummary } from "./use-summary";
@@ -6,6 +9,7 @@ import { useSummary } from "./use-summary";
 export function Summaries() {
   const navigate = useNavigate();
   const { summariesBuilt } = useSummary();
+  const { collapsed } = useCollapsedHeader();
 
   const formatDate = (dateString: number) => {
     const date = new Date(dateString);
@@ -19,23 +23,20 @@ export function Summaries() {
   return (
     <div className="min-h-screen bg-zinc-950 pb-24">
       <div className="mx-auto max-w-2xl p-6">
-        <div className="mb-6 flex items-start gap-3">
-          <button
-            onClick={() => navigate("/home")}
-            className="mb-4 flex size-11 items-center justify-center rounded-xl border border-zinc-800 bg-zinc-900 text-zinc-400 transition-all hover:border-zinc-700 hover:bg-zinc-800 hover:text-white active:scale-95"
+        <TopBar collapsed={collapsed} title="Sessões anteriores" />
+        <div>
+          <h1
+            className={cn(
+              "text-2xl font-bold text-white transition-all duration-300",
+              collapsed ? "-translate-y-4 opacity-0" : "opacity-100",
+            )}
           >
-            <ArrowLeft className="size-5" />
-          </button>
+            Sessões Anteriores
+          </h1>
 
-          <div>
-            <h1 className="text-3xl font-bold text-white">
-              Sessões Anteriores
-            </h1>
-
-            <p className="text-zinc-500">
-              Revise resultados, estatísticas e resumos compartilháveis.
-            </p>
-          </div>
+          <p className="text-zinc-500">
+            Revise resultados, estatísticas e resumos compartilháveis.
+          </p>
         </div>
 
         {summariesBuilt.length === 0 ? (

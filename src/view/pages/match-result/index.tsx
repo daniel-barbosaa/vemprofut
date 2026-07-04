@@ -1,3 +1,5 @@
+import { useCollapsedHeader } from "@/app/hooks/use-collapsed-header";
+import { TopBar } from "@/view/components/top-bar";
 import { ActionButton } from "./action-button";
 import { Info } from "./info";
 import { QueueStatus } from "./queue-status";
@@ -19,11 +21,21 @@ export function MatchResult() {
     nextMatch,
     handleStartNextMatch,
   } = result;
+  const { collapsed } = useCollapsedHeader();
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 p-6">
       <div className="w-full max-w-2xl">
-        <ResultHeader isDraw={isDraw} winner={winner} pelada={pelada} />
+        <TopBar
+          title={isDraw ? "Empate!" : "Partida Finalizada!"}
+          collapsed={collapsed}
+        />
+        <ResultHeader
+          isDraw={isDraw}
+          winner={winner}
+          pelada={pelada}
+          collapsed={collapsed}
+        />
         <ScoreDisplay match={match} winner={winner} />
         <Info
           isDraw={isDraw}
