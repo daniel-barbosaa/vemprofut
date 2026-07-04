@@ -16,11 +16,12 @@ export function TopBar({ title, collapsed }: TopBarProps) {
   const [show, setShow] = useState(false);
 
   const sheetItems = [
-    { icon: Home, label: "Início", path: "/home" },
+    { icon: Home, label: "Início", path: "/" },
     { icon: History, label: "Histórico de partidas", path: "/history" },
   ];
 
   const isMatchResultScreen = useLocation().pathname === paths.matchResult;
+  const isCreatePeladaScreen = useLocation().pathname === paths.create;
 
   return (
     <div className="sticky top-0 z-50 flex items-center justify-between bg-zinc-950/80 backdrop-blur">
@@ -46,30 +47,36 @@ export function TopBar({ title, collapsed }: TopBarProps) {
         </h1>
       </div>
 
-      <button
-        onClick={() => setShow(true)}
-        className={cn("rounded-full p-2 transition-colors hover:bg-zinc-800")}
-      >
-        <EllipsisVertical className="size-5 text-white" />
-      </button>
+      {!isCreatePeladaScreen && (
+        <>
+          <button
+            onClick={() => setShow(true)}
+            className={cn(
+              "rounded-full p-2 transition-colors hover:bg-zinc-800",
+            )}
+          >
+            <EllipsisVertical className="size-5 text-white" />
+          </button>
 
-      <BottomSheet open={show} onClose={() => setShow(false)} title="">
-        <div className="space-y-2">
-          {sheetItems.map(({ icon: Icon, label, path }) => (
-            <button
-              key={path}
-              onClick={() => {
-                setShow(false);
-                navigate(path);
-              }}
-              className="flex w-full items-center gap-3 rounded-2xl border border-zinc-800 bg-zinc-800/50 p-4 text-left text-zinc-200 transition-colors hover:bg-zinc-800"
-            >
-              <Icon className="size-5 text-emerald-400" />
-              <span className="font-medium">{label}</span>
-            </button>
-          ))}
-        </div>
-      </BottomSheet>
+          <BottomSheet open={show} onClose={() => setShow(false)} title="">
+            <div className="space-y-2">
+              {sheetItems.map(({ icon: Icon, label, path }) => (
+                <button
+                  key={path}
+                  onClick={() => {
+                    setShow(false);
+                    navigate(path);
+                  }}
+                  className="flex w-full items-center gap-3 rounded-2xl border border-zinc-800 bg-zinc-800/50 p-4 text-left text-zinc-200 transition-colors hover:bg-zinc-800"
+                >
+                  <Icon className="size-5 text-emerald-400" />
+                  <span className="font-medium">{label}</span>
+                </button>
+              ))}
+            </div>
+          </BottomSheet>
+        </>
+      )}
     </div>
   );
 }

@@ -1,26 +1,29 @@
+import { useCollapsedHeader } from "@/app/hooks/use-collapsed-header";
 import { cn } from "@/app/utils/class-name-merger";
 import { Button } from "@/view/components/button";
-import { ArrowLeft, ArrowRight, CircleAlert } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { TopBar } from "@/view/components/top-bar";
+import { ArrowRight, CircleAlert } from "lucide-react";
 import { useCreatePeladaController } from "./use-create-pelada-controller";
 
 export function CreatePelada() {
-  const navigate = useNavigate();
   const { handleSubmit, register, errors, watch, setValue } =
     useCreatePeladaController();
+  const { collapsed } = useCollapsedHeader();
 
   return (
     <div className="flex min-h-screen flex-col bg-zinc-950">
       <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col p-6">
-        <div className="mb-8">
-          <button
-            onClick={() => navigate("/home")}
-            className="mb-4 inline-flex items-center gap-2 text-zinc-400 hover:text-white"
+        <TopBar collapsed={collapsed} title="Nova Pelada" />
+
+        <div className="mb-6">
+          <h1
+            className={cn(
+              "text-2xl font-bold text-white transition-all duration-300",
+              collapsed ? "-translate-y-4 opacity-0" : "opacity-100",
+            )}
           >
-            <ArrowLeft className="size-4" />
-            Voltar
-          </button>
-          <h1 className="mb-2 text-3xl font-bold text-white">Nova Pelada</h1>
+            Nova Pelada
+          </h1>
           <p className="text-zinc-500">Configure as regras da partida</p>
         </div>
 

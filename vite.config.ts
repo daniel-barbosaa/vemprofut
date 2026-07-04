@@ -11,8 +11,8 @@ export default defineConfig({
     VitePWA({
       registerType: "autoUpdate",
       manifest: {
-        name: "PeladaPro",
-        short_name: "PeladaPro",
+        name: "VemProFut",
+        short_name: "VemProFut",
         description:
           "Organize peladas, acompanhe estatísticas e registre resultados.",
         theme_color: "#09090b",

@@ -54,7 +54,7 @@ export function BottomNav() {
   const navItems = [
     { icon: Trophy, label: "Partida", path: "/match" },
     { icon: Users, label: "Times", path: "/teams" },
-    { icon: House, label: "Início", path: "/home" },
+    { icon: House, label: "Início", path: "/" },
     { icon: ListOrdered, label: "Jogadores", path: "/players" },
     { icon: MoreHorizontal, label: "Mais" },
   ];

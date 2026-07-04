@@ -30,7 +30,7 @@ export function Players() {
 
   const handleContinue = () => {
     if (hasDrawnTeams) {
-      navigate("/home");
+      navigate("/");
       return;
     }
 
