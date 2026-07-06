@@ -10,12 +10,6 @@ export function useHomeController() {
   async function finishPelada() {
     if (!user || !pelada) return;
 
-    if (pelada.matches.length === 0) {
-      resetPelada();
-      toast.success("Pelada encerrada");
-      return;
-    }
-
     const { error } = await create(user.id, pelada);
 
     if (error) {
