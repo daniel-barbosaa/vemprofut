@@ -40,21 +40,12 @@ export function Players() {
   return (
     <div className="min-h-screen bg-zinc-950 pb-36">
       <div className="mx-auto max-w-2xl p-6">
-        <div className="mb-8 flex items-center justify-between">
+        <div className="top-0 mb-8 flex items-center justify-between">
           <div>
             <h1 className="mb-1 text-3xl font-bold text-white">Jogadores</h1>
 
             <p className="text-zinc-500">{totalPlayers} jogadores</p>
           </div>
-
-          {totalPlayers > 0 && (
-            <button
-              onClick={() => setShow(true)}
-              className="flex size-12 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-400 ring-1 ring-emerald-500/20 transition-all will-change-transform hover:scale-105 hover:bg-emerald-500/20 active:scale-95"
-            >
-              <Plus className="size-5" />
-            </button>
-          )}
         </div>
 
         {totalPlayers === 0 && (
@@ -171,6 +162,23 @@ export function Players() {
         </div>
       )}
 
+      {totalPlayers > 0 && (
+        <motion.button
+          onClick={() => setShow(true)}
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          whileTap={{ scale: 0.92 }}
+          whileHover={{ scale: 1.05 }}
+          transition={{
+            type: "spring",
+            stiffness: 450,
+            damping: 24,
+          }}
+          className="fixed right-5 bottom-40 z-40 flex size-16 items-center justify-center rounded-full bg-emerald-500 text-white shadow-xl shadow-emerald-500/30"
+        >
+          <Plus className="size-8" />
+        </motion.button>
+      )}
       <BottomNav />
     </div>
   );

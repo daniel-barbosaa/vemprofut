@@ -53,7 +53,7 @@ export const usePeladaStore = create<Store>()(
           teamA: { ...teamA, score: 0 },
           teamB: { ...teamB, score: 0 },
           startTime: Date.now(),
-          duration: pelada.matchDuration * 2.0,
+          duration: pelada.matchDuration * 60,
           goalLimit: pelada.goalLimit,
           isActive: true,
           isPaused: false,

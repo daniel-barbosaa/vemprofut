@@ -1,6 +1,6 @@
 import GoogleIcon from "@/assets/google.svg";
 import { Button } from "@/view/components/button";
-import { Trophy } from "lucide-react";
+import { FileText, Trophy, Users } from "lucide-react";
 import { motion } from "motion/react";
 import { useSignInController } from "./use-sign-in-controller";
 
@@ -15,39 +15,45 @@ export function SignIn() {
         transition={{ duration: 0.3 }}
         className="w-full max-w-md"
       >
-        <div className="mb-10 text-center">
-          <div className="relative mb-6 inline-block">
-            <div className="absolute inset-0 rounded-full bg-emerald-500/20 blur-3xl" />
-
-            <Trophy
-              className="relative mx-auto size-20 text-emerald-400"
-              strokeWidth={1.5}
-            />
-          </div>
-
-          <h1 className="text-5xl font-bold text-white">
-            Pelada<span className="text-emerald-400">Pro</span>
+        <div className="mb-8 flex flex-col items-center justify-center">
+          <motion.img
+            src="/soccer-ball.svg"
+            alt="Bola"
+            className="mx-auto size-30"
+            initial={{
+              x: -300,
+              rotate: -1080,
+            }}
+            animate={{
+              x: 0,
+              rotate: 0,
+            }}
+            transition={{
+              duration: 1.4,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+          />
+          <h1 className="text-center text-4xl font-bold text-white">
+            VemPro<span className="text-emerald-400">Fut</span>
           </h1>
-
-          <p className="mt-4 text-lg text-zinc-400">
-            Organize suas peladas com rapidez
-          </p>
         </div>
 
         <div className="mb-8 space-y-3">
-          <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 px-4 py-3 text-sm text-zinc-300 backdrop-blur-sm">
-            ⚽ Monte times rapidamente
+          <div className="flex items-center gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/60 px-4 py-3 text-sm text-zinc-300 backdrop-blur-sm">
+            <Users className="h-5 w-5 shrink-0 text-emerald-400" />
+            <span>Monte times rapidamente</span>
           </div>
 
-          <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 px-4 py-3 text-sm text-zinc-300 backdrop-blur-sm">
-            📄 Gere resumos automáticos
+          <div className="flex items-center gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/60 px-4 py-3 text-sm text-zinc-300 backdrop-blur-sm">
+            <FileText className="h-5 w-5 shrink-0 text-blue-400" />
+            <span>Gere resumos automáticos e compartilhe com amigos</span>
           </div>
 
-          <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 px-4 py-3 text-sm text-zinc-300 backdrop-blur-sm">
-            🏆 Salve o histórico das partidas
+          <div className="flex items-center gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/60 px-4 py-3 text-sm text-zinc-300 backdrop-blur-sm">
+            <Trophy className="h-5 w-5 shrink-0 text-yellow-400" />
+            <span>Salve o histórico das partidas</span>
           </div>
         </div>
-
         <div className="rounded-3xl border border-zinc-800 bg-zinc-900/70 p-5 backdrop-blur-sm">
           <Button
             type="button"
