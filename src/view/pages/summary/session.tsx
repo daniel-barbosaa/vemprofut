@@ -117,7 +117,7 @@ export function SessionSummary() {
   );
 
   return (
-    <div className="p-6">
+    <div className="px-6 pt-[calc(env(safe-area-inset-top)+2rem)] pb-8">
       <motion.div
         ref={summaryRef}
         initial={{ opacity: 0, scale: 0.95 }}

@@ -27,7 +27,7 @@ export function Match() {
   }
 
   return (
-    <div className="p-6">
+    <div className="px-6 pt-[calc(env(safe-area-inset-top)+2rem)] pb-8">
       <TeamReturnedNotice match={match} />
       <Timer
         timeProgress={timeProgress}
