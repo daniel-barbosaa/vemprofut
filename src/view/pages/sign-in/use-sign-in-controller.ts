@@ -4,6 +4,7 @@ export function useSignInController() {
   async function signInWithGoogle() {
     await supabase.auth.signInWithOAuth({
       provider: "google",
+      options: {},
     });
   }
 

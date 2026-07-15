@@ -65,7 +65,7 @@ export function BottomNav() {
   ];
 
   return (
-    <div className="fixed right-0 bottom-0 left-0 z-40 border-t border-zinc-800 bg-zinc-900 pb-[env(safe-area-inset-bottom)]">
+    <div className="fixed right-0 bottom-0 left-0 z-40 border-t border-zinc-800 bg-zinc-900">
       <div className="mx-auto flex max-w-2xl items-center justify-around">
         {navItems.map(({ icon: Icon, label, path }) => {
           const isActive =

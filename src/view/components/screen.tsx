@@ -10,7 +10,7 @@ export function Screen({ children, className }: ScreenProps) {
   return (
     <div
       className={cn(
-        "px-6 pt-[calc(env(safe-area-inset-top)+2rem)] pb-8",
+        "px-4 pt-[calc(env(safe-area-inset-top)+0.5rem)]",
         className,
       )}
     >

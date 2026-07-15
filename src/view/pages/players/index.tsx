@@ -3,7 +3,8 @@ import { usePeladaStore } from "@/store/pelada/pelada.store";
 import { BottomSheet } from "@/view/components/bottom-sheet";
 import { BottomNav } from "@/view/components/botton-nav";
 import { Button } from "@/view/components/button";
-import { ArrowRight, Plus, Trash2, User } from "lucide-react";
+import { Screen } from "@/view/components/screen";
+import { ArrowRight, Plus, Trash2 } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -38,8 +39,8 @@ export function Players() {
   };
 
   return (
-    <div className="p-6">
-      <div className="top-0 mb-8 flex items-center justify-between">
+    <Screen>
+      <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="mb-1 text-3xl font-bold text-white">Jogadores</h1>
 
@@ -67,14 +68,8 @@ export function Players() {
         </button>
       )}
 
-      {totalPlayers > 0 && (
-        <div>
-          <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
-            <User className="size-5 text-zinc-400" />
-
-            {`Jogadores de Linha ${totalPlayers}`}
-          </h2>
-
+      <div className="pb-30">
+        {totalPlayers > 0 && (
           <div className="space-y-2">
             {pelada?.players.map((player, index) => (
               <motion.div
@@ -107,8 +102,13 @@ export function Players() {
               </motion.div>
             ))}
           </div>
-        </div>
-      )}
+        )}
+        {hasDrawnTeams && totalPlayers < 10 && (
+          <p className="mb-3 p-2 text-center text-sm text-zinc-500">
+            Faltam {10 - totalPlayers} jogadores para o sorteio mínimo
+          </p>
+        )}
+      </div>
 
       <BottomSheet
         open={show}
@@ -135,13 +135,8 @@ export function Players() {
         </div>
       </BottomSheet>
 
-      {!hasDrawnTeams && totalPlayers < 10 && (
-        <p className="mb-3 text-center text-sm text-zinc-500">
-          Faltam {10 - totalPlayers} jogadores para o sorteio mínimo
-        </p>
-      )}
       {totalPlayers >= 1 && (
-        <div className="fixed right-0 bottom-18 left-0 z-30 p-4">
+        <div className="fixed right-0 bottom-16 left-0 z-30 p-4">
           <div className="mx-auto max-w-2xl">
             <Button
               onClick={handleContinue}
@@ -178,6 +173,6 @@ export function Players() {
         </motion.button>
       )}
       <BottomNav />
-    </div>
+    </Screen>
   );
 }

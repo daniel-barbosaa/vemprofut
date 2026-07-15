@@ -1,3 +1,4 @@
+import { Screen } from "@/view/components/screen";
 import { ControlButtons } from "./control-buttons";
 import { EmptyMatchState } from "./empty-match-state";
 import { QueuePreview } from "./queue-preview";
@@ -27,7 +28,7 @@ export function Match() {
   }
 
   return (
-    <div className="px-6 pt-[calc(env(safe-area-inset-top)+2rem)] pb-8">
+    <Screen>
       <TeamReturnedNotice match={match} />
       <Timer
         timeProgress={timeProgress}
@@ -51,6 +52,6 @@ export function Match() {
         isPaused={isPaused}
         endMatch={endMatch}
       />
-    </div>
+    </Screen>
   );
 }

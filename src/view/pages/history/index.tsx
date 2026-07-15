@@ -3,12 +3,13 @@ import { MatchList } from "./match-list";
 import { StatisticsOverview } from "./statistics-overview";
 import { TeamStatistics } from "./team-statistics";
 import { useHistory } from "./use-history";
+import { Screen } from "@/view/components/screen";
 
 export function History() {
   const { formatDuration, getEndReasonText, stats, pelada } = useHistory();
 
   return (
-    <div className="p-6">
+    <Screen>
       <div className="mb-6">
         <h1 className="mb-2 text-3xl font-bold text-white">Histórico</h1>
         <p className="text-zinc-500">
@@ -32,6 +33,6 @@ export function History() {
           />
         </>
       )}
-    </div>
+    </Screen>
   );
 }

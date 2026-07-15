@@ -1,4 +1,5 @@
 import { usePeladaStore } from "@/store/pelada/pelada.store";
+import { Screen } from "@/view/components/screen";
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { EmptyState } from "./empty-state";
@@ -33,7 +34,7 @@ export function Teams() {
   const restingTeam = pelada.queue.find((t) => t.isResting);
 
   return (
-    <div className="p-6">
+    <Screen>
       <header>
         <div className="mb-6">
           <h1 className="mb-2 text-3xl font-bold text-white">Times Fixos</h1>
@@ -75,6 +76,6 @@ export function Teams() {
         isOpen={isManualSubstituteDialogOpen}
         onClose={() => setIsManualSubstituteDialogOpen(false)}
       />
-    </div>
+    </Screen>
   );
 }

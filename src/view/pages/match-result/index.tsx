@@ -24,7 +24,7 @@ export function MatchResult() {
   const { collapsed } = useCollapsedHeader();
 
   return (
-    <div className="p-6">
+    <div className="px-4">
       <TopBar
         title={isDraw ? "Empate!" : "Partida Finalizada!"}
         collapsed={collapsed}

@@ -9,11 +9,12 @@ export function FloatingSubstituteButton({
   setSubstituteDialogOpen,
   pelada,
 }: FloatingSubstituteButtonProps) {
-  if (pelada.queue.length < 0) {
+  if (pelada.queue.length === 0) {
     return null;
   }
+
   return (
-    <div className="fixed right-6 bottom-24 z-10">
+    <div className="fixed right-6 bottom-30 z-10">
       <button
         onClick={() => setSubstituteDialogOpen(true)}
         className="group relative rounded-full bg-blue-500 p-4 text-white shadow-lg shadow-blue-500/30 transition-all hover:bg-blue-600 active:scale-95"
