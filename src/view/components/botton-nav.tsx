@@ -4,6 +4,7 @@ import { cn } from "@/app/utils/class-name-merger";
 import { usePeladaStore } from "@/store/pelada/pelada.store";
 import {
   ClipboardList,
+  Download,
   History,
   House,
   ListOrdered,
@@ -62,10 +63,15 @@ export function BottomNav() {
   const sheetItems = [
     { icon: ClipboardList, label: "Resumos", path: "/summaries" },
     { icon: History, label: "Histórico de partidas", path: "/history" },
+    {
+      icon: Download,
+      label: "Instalar aplicativo",
+      path: "/install",
+    },
   ];
 
   return (
-    <div className="fixed right-0 bottom-0 left-0 z-40 border-t border-zinc-800 bg-zinc-900">
+    <div className="fixed right-0 bottom-0 left-0 z-40 border-t border-zinc-800 bg-zinc-900 pb-5">
       <div className="mx-auto flex max-w-2xl items-center justify-around">
         {navItems.map(({ icon: Icon, label, path }) => {
           const isActive =

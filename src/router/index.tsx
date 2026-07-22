@@ -3,6 +3,7 @@ import { AppLayout } from "@/view/layout/app-layout";
 import { CreatePelada } from "@/view/pages/create-pelada";
 import { History } from "@/view/pages/history";
 import { Home } from "@/view/pages/home/home";
+import { InstallApp } from "@/view/pages/install-app";
 import { Match } from "@/view/pages/match";
 import { MatchResult } from "@/view/pages/match-result";
 import { OrganizeNextMatch } from "@/view/pages/organize";
@@ -28,6 +29,7 @@ export function Router() {
           <Route element={<AppLayout />}>
             <Route element={<Teams />} path={paths.teams} />
             <Route element={<History />} path={paths.history} />
+            <Route element={<InstallApp />} path={paths.installApp} />
           </Route>
 
           <Route element={<AppLayout showBottomNav={false} />}>
