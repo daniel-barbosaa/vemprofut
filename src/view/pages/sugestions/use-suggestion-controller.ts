@@ -33,7 +33,14 @@ export function useSuggestionsController() {
 
     setIsSubmitting(true);
 
-    const { error } = await create(user.id, feedback);
+    const { error } = await create(
+      {
+        userId: user.id,
+        name: user.user_metadata.name,
+        email: user.user_metadata.email,
+      },
+      feedback,
+    );
 
     if (error) {
       toast.error("Houve algum erro ao enviar feedback, tente novamente!");

@@ -12,4 +12,5 @@ export const paths = {
   organize: "/match/organize",
   installApp: "/install",
   suggestions: "/suggestions",
+  feedbacks: "/feedbacks",
 } as const;

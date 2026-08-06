@@ -1,4 +1,4 @@
-import { useSummaries } from "@/app/hooks/use-summaries";
+import { useSummaries } from "@/app/hooks/use-summary";
 import { buildSummary } from "./utils/build-summary";
 
 export function useSummaryController() {

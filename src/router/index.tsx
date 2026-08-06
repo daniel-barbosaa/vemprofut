@@ -1,6 +1,7 @@
 import { MatchInProgressGuard } from "@/router/match-in-progress-guard";
 import { AppLayout } from "@/view/layout/app-layout";
 import { CreatePelada } from "@/view/pages/create-pelada";
+import { Feedbacks } from "@/view/pages/feedbacks";
 import { History } from "@/view/pages/history";
 import { Home } from "@/view/pages/home/home";
 import { InstallApp } from "@/view/pages/install-app";
@@ -15,6 +16,7 @@ import { SessionSummary } from "@/view/pages/summary/session";
 import { TeamDraw } from "@/view/pages/team-draw";
 import { Teams } from "@/view/pages/teams";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { AdminGuard } from "./admin-guard";
 import { AuthGuard } from "./auth-guard";
 import { paths } from "./paths";
 
@@ -50,6 +52,12 @@ export function Router() {
             <Route element={<SessionSummary />} path={`${paths.summary}/:id`} />
 
             <Route element={<OrganizeNextMatch />} path={paths.organize} />
+          </Route>
+
+          <Route element={<AdminGuard />}>
+            <Route element={<AppLayout />}>
+              <Route element={<Feedbacks />} path={paths.feedbacks} />
+            </Route>
           </Route>
         </Route>
 

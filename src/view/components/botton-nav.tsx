@@ -10,11 +10,14 @@ import {
   ListOrdered,
   LogOut,
   MessageSquareMore,
+  MessagesSquare,
   MoreHorizontal,
   Trophy,
   Users,
 } from "lucide-react";
 
+import { useFeedback } from "@/app/hooks/use-feedback";
+import { ADMIN_EMAIL } from "@/router/admin-guard";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { BottomSheet } from "./bottom-sheet";
@@ -26,6 +29,8 @@ export function BottomNav() {
   const currentMatch = usePeladaStore((state) => state.pelada?.currentMatch);
   const isMatchInProgress = currentMatch?.isActive;
   const [show, setShow] = useState(false);
+  const isAdmin = user?.email === ADMIN_EMAIL;
+  const { data } = useFeedback();
 
   if (isMatchInProgress && location.pathname === "/match") {
     return null;
@@ -70,6 +75,16 @@ export function BottomNav() {
       path: "/install",
     },
     { icon: MessageSquareMore, label: "Enviar sugestão", path: "/suggestions" },
+    ...(isAdmin
+      ? [
+          {
+            icon: MessagesSquare,
+            label: "Feedbacks",
+            path: "/feedbacks",
+            badge: data?.length,
+          },
+        ]
+      : []),
   ];
 
   return (
@@ -121,7 +136,7 @@ export function BottomNav() {
           </div>
 
           <div className="space-y-2">
-            {sheetItems.map(({ icon: Icon, label, path }) => (
+            {sheetItems.map(({ icon: Icon, label, path, badge }) => (
               <button
                 onClick={() => {
                   setShow(false);
@@ -129,8 +144,15 @@ export function BottomNav() {
                 }}
                 className="flex w-full items-center gap-3 rounded-2xl border border-zinc-800 bg-zinc-800/50 p-4 text-left text-zinc-200 transition-colors hover:bg-zinc-800"
               >
-                <Icon className="size-5 text-emerald-400" />
-                <span className="font-medium">{label}</span>
+                <div className="flex items-center gap-3">
+                  <Icon className="size-5 text-emerald-400" />
+                  <span className="font-medium">{label}</span>
+                </div>
+                {badge !== undefined && badge > 0 && (
+                  <span className="flex min-w-5 items-center justify-center rounded-full bg-red-500 px-2 py-0.5 text-xs font-semibold text-white">
+                    {badge}
+                  </span>
+                )}
               </button>
             ))}
 

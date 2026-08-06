@@ -4,8 +4,8 @@ import {
   CircleEllipsis,
   Lightbulb,
   Palette,
+  Rocket,
   Send,
-  Sparkles,
   Zap,
   type LucideIcon,
 } from "lucide-react";
@@ -30,7 +30,7 @@ const CATEGORIES_ITEMS = [
   {
     id: "feature",
     label: "Nova funcionalidade",
-    icon: Sparkles,
+    icon: Rocket,
   },
   {
     id: "performance",
