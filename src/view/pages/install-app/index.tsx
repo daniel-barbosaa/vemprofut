@@ -12,7 +12,6 @@ const BENEFITS = [
 
 export function InstallApp() {
   const { isAndroid, isIOS, isStandalone } = useDevice();
-  console.log({ isAndroid, isIOS, isStandalone });
 
   if (!isAndroid && !isIOS) {
     return (

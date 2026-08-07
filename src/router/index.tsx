@@ -25,15 +25,12 @@ export function Router() {
     <BrowserRouter>
       <Routes>
         <Route element={<AuthGuard isPrivate />}>
-          <Route element={<AppLayout showBottomNav={false} />}>
-            <Route element={<Home />} path={paths.home} />
-          </Route>
-
           <Route element={<AppLayout />}>
             <Route element={<Teams />} path={paths.teams} />
             <Route element={<History />} path={paths.history} />
             <Route element={<InstallApp />} path={paths.installApp} />
             <Route element={<Suggestions />} path={paths.suggestions} />
+            <Route element={<Home />} path={paths.home} />
           </Route>
 
           <Route element={<AppLayout showBottomNav={false} />}>

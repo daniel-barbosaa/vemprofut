@@ -136,7 +136,7 @@ export function Players() {
       </BottomSheet>
 
       {totalPlayers >= 1 && (
-        <div className="fixed right-0 bottom-16 left-0 z-30 p-4">
+        <div className="fixed right-0 bottom-22 left-0 z-30 p-4">
           <div className="mx-auto max-w-2xl">
             <Button
               onClick={handleContinue}
@@ -167,7 +167,7 @@ export function Players() {
             stiffness: 450,
             damping: 24,
           }}
-          className="fixed right-5 bottom-40 z-40 flex size-16 items-center justify-center rounded-full bg-emerald-500 text-white shadow-xl shadow-emerald-500/30"
+          className="fixed right-5 bottom-45 z-40 flex size-16 items-center justify-center rounded-full bg-emerald-500 text-white shadow-xl shadow-emerald-500/30"
         >
           <Plus className="size-8" />
         </motion.button>

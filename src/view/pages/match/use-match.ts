@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 
 export function useMatch() {
   const navigate = useNavigate();
-
   const {
     pelada,
     addGoal,
@@ -15,11 +14,10 @@ export function useMatch() {
     resumeMatch,
     startOvertime,
   } = usePeladaStore();
-
   const match = pelada?.currentMatch;
-
   const isPaused = match?.isPaused ?? false;
   const isOvertime = match?.isOvertime ?? false;
+  const whistle = new Audio("/sounds/whistle-sound-effect.mp3");
 
   const currentDuration = useMemo(() => {
     if (!match) return 0;
@@ -82,6 +80,7 @@ export function useMatch() {
       match.teamB.score >= match.goalLimit;
 
     if (reachedGoalLimit) {
+      whistle.play();
       finishMatch("Limite de gols atingido!", "⚽");
     }
   }, [
@@ -111,12 +110,12 @@ export function useMatch() {
 
         if (shouldStartOvertime) {
           startOvertime();
-
           toast("Empate! Acréscimo iniciado.");
 
           return;
         }
 
+        whistle.play();
         finishMatch("Tempo encerrado!", "⏱️");
       }
     }, 1000);

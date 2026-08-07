@@ -1,6 +1,6 @@
 import { usePeladaStore } from "@/store/pelada/pelada.store";
 import { Screen } from "@/view/components/screen";
-import { Clock, History, Play, Plus, Trophy, Users } from "lucide-react";
+import { Clock, History, Play, Plus, Trophy } from "lucide-react";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router";
 import { useHomeController } from "./use-home-controller";
@@ -124,76 +124,6 @@ export function Home() {
               </button>
             </div>
           </div>
-
-          {!isMatchActive && (
-            <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5">
-              <h3 className="mb-4 text-lg font-semibold text-white">
-                Controle da pelada
-              </h3>
-
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  onClick={() => navigate("/teams")}
-                  className="flex min-h-24 flex-col items-center justify-center gap-2 rounded-xl bg-zinc-800 p-4 text-zinc-200 transition-colors hover:bg-zinc-700 active:scale-95"
-                >
-                  <Users className="size-6 text-emerald-400" />
-                  <span className="text-sm font-semibold">Times</span>
-                </button>
-
-                <button
-                  onClick={() => navigate("/history")}
-                  className="flex min-h-24 flex-col items-center justify-center gap-2 rounded-xl bg-zinc-800 p-4 text-zinc-200 transition-colors hover:bg-zinc-700 active:scale-95"
-                >
-                  <History className="size-6 text-emerald-400" />
-                  <span className="text-sm font-semibold">Histórico</span>
-                </button>
-              </div>
-            </div>
-          )}
-
-          {pelada.queue.find((team) => team.isResting) && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="rounded-2xl border-2 border-amber-600/50 bg-linear-to-br from-amber-900/30 to-yellow-900/30 p-5"
-            >
-              <div className="mb-3 flex items-center gap-3">
-                <div className="text-3xl">👑</div>
-                <div>
-                  <div className="text-lg font-bold text-amber-300">
-                    Fila de Descanso
-                  </div>
-                  <div className="text-sm text-amber-400/70">
-                    Time aguardando retorno
-                  </div>
-                </div>
-              </div>
-              <div className="rounded-xl border border-amber-600/40 bg-amber-900/40 p-4">
-                <div className="mb-2 text-lg font-bold text-white">
-                  {pelada.queue.find((team) => team.isResting)?.name}
-                </div>
-                <div className="space-y-1 text-sm">
-                  <div className="flex items-center gap-2 text-amber-300">
-                    <span>🔥</span>
-                    <span>
-                      {pelada.maxConsecutiveWins} vitórias consecutivas
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2 text-amber-300">
-                    <span>⏳</span>
-                    <span>
-                      {(() => {
-                        const rt = pelada.queue.find((team) => team.isResting);
-                        return rt?.matchesToRest && rt.matchesToRest > 0
-                          ? `${rt.matchesToRest} partida${rt.matchesToRest > 1 ? "s" : ""} restante${rt.matchesToRest > 1 ? "s" : ""}`
-                          : "Fora da próxima partida";
-                      })()}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          )}
 
           {pelada.matches.length > 0 && (
             <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
