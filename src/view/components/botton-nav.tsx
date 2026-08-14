@@ -26,7 +26,8 @@ export function BottomNav() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const currentMatch = usePeladaStore((state) => state.pelada?.currentMatch);
+  const { pelada, resetPelada } = usePeladaStore();
+  const currentMatch = pelada?.currentMatch;
   const isMatchInProgress = currentMatch?.isActive;
   const [show, setShow] = useState(false);
   const isAdmin = user?.email === ADMIN_EMAIL;
@@ -39,6 +40,7 @@ export function BottomNav() {
   async function signOut() {
     setShow(false);
     await supabase.auth.signOut();
+    resetPelada();
     setShow(false);
   }
 

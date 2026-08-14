@@ -1,3 +1,4 @@
+import { usePersistPelada } from "@/app/hooks/use-persist-pelada";
 import { usePeladaStore } from "@/store/pelada/pelada.store";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
@@ -18,6 +19,7 @@ export function useMatch() {
   const isPaused = match?.isPaused ?? false;
   const isOvertime = match?.isOvertime ?? false;
   const whistle = new Audio("/sounds/whistle-sound-effect.mp3");
+  const { persistPelada } = usePersistPelada();
 
   const currentDuration = useMemo(() => {
     if (!match) return 0;
@@ -46,7 +48,7 @@ export function useMatch() {
   const hasFinishedMatchRef = useRef(false);
 
   const finishMatch = useCallback(
-    (message: string, icon: string) => {
+    async (message: string, icon: string) => {
       if (hasFinishedMatchRef.current) return;
 
       hasFinishedMatchRef.current = true;
@@ -55,9 +57,15 @@ export function useMatch() {
 
       endMatch();
 
+      try {
+        await persistPelada();
+      } catch (error) {
+        console.error("Erro ao persistir pelada:", error);
+      }
+
       navigate("/match/result");
     },
-    [endMatch, navigate],
+    [endMatch, navigate, persistPelada],
   );
 
   const isDraw = useCallback(() => {

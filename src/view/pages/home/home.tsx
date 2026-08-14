@@ -1,5 +1,7 @@
+import { useActivePelada } from "@/app/hooks/use-active-pelada";
 import { usePeladaStore } from "@/store/pelada/pelada.store";
 import { Screen } from "@/view/components/screen";
+import { Spinner } from "@/view/components/ui/spinner";
 import { Clock, History, Play, Plus, Trophy } from "lucide-react";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router";
@@ -13,6 +15,7 @@ export function Home() {
   const hasFinishedMatchPendingQueueUpdate = Boolean(
     pelada?.currentMatch && !pelada.currentMatch.isActive,
   );
+  const { isLoading } = useActivePelada();
 
   const handleStartMatch = () => {
     if (pelada && pelada.queue.length >= 2) {
@@ -41,7 +44,23 @@ export function Home() {
         </button>
       </div>
 
-      {pelada ? (
+      {isLoading ? (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="flex flex-col items-center justify-center py-16 text-center"
+        >
+          <Spinner size="md" />
+
+          <h2 className="mt-2 mb-2 text-lg font-semibold text-white">
+            Carregando informações...
+          </h2>
+
+          <p className="text-sm text-zinc-500">
+            Estamos recuperando os dados da sua última sessão.
+          </p>
+        </motion.div>
+      ) : pelada ? (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

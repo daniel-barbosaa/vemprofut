@@ -13,9 +13,10 @@ import type {
 
 type Store = {
   pelada: Pelada | null;
-  resetPelada: () => void;
+  setPelada(pelada: Pelada): void;
+  resetPelada(): void;
   startMatch(): void;
-  createPelada(data: CreatePeladaDTO): void;
+  createPelada(data: CreatePeladaDTO): Pelada;
   addPlayer(name: string): void;
   removePlayer(playerId: string): void;
   drawTeams(): void;
@@ -68,6 +69,7 @@ export const usePeladaStore = create<Store>()(
           },
         });
       },
+
       pauseMatch: () => {
         set((state) => {
           if (!state.pelada?.currentMatch) return state;
@@ -128,6 +130,7 @@ export const usePeladaStore = create<Store>()(
           queue: [],
         };
         set({ pelada: newPelada });
+        return newPelada;
       },
       addPlayer: (name: string) => {
         const { pelada } = get();
@@ -708,6 +711,9 @@ export const usePeladaStore = create<Store>()(
             },
           };
         });
+      },
+      setPelada: (pelada) => {
+        set({ pelada });
       },
     }),
     { name: "pelada-storage" },

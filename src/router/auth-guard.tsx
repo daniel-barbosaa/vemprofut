@@ -1,4 +1,5 @@
 import { useAuth } from "@/app/hooks/use-auth";
+import { PeladaInitializer } from "@/view/components/pelada-initializer";
 import { motion } from "motion/react";
 import { Navigate, Outlet } from "react-router-dom";
 
@@ -50,5 +51,10 @@ export function AuthGuard({ isPrivate }: AuthGuardProps) {
     return <Navigate to="/" replace />;
   }
 
-  return <Outlet />;
+  return (
+    <>
+      <PeladaInitializer />
+      <Outlet />
+    </>
+  );
 }
