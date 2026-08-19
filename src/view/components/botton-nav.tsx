@@ -1,6 +1,8 @@
 import { useAuth } from "@/app/hooks/use-auth";
+import { useFeedback } from "@/app/hooks/use-feedback";
 import { supabase } from "@/app/lib/supabase";
 import { cn } from "@/app/utils/class-name-merger";
+import { ADMIN_EMAIL } from "@/router/admin-guard";
 import { usePeladaStore } from "@/store/pelada/pelada.store";
 import {
   ClipboardList,
@@ -17,23 +19,30 @@ import {
   TvMinimalPlay,
   Users,
 } from "lucide-react";
-
-import { useFeedback } from "@/app/hooks/use-feedback";
-import { ADMIN_EMAIL } from "@/router/admin-guard";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { BottomSheet } from "./bottom-sheet";
 
+interface MenuItem {
+  icon: typeof Users;
+  label: string;
+  path: string;
+  badge?: number;
+}
+
 export function BottomNav() {
   const { user } = useAuth();
+  const { data } = useFeedback();
+  const { pelada, resetPelada } = usePeladaStore();
+
   const navigate = useNavigate();
   const location = useLocation();
-  const { pelada, resetPelada } = usePeladaStore();
+
+  const [show, setShow] = useState(false);
+
   const currentMatch = pelada?.currentMatch;
   const isMatchInProgress = currentMatch?.isActive;
-  const [show, setShow] = useState(false);
   const isAdmin = user?.email === ADMIN_EMAIL;
-  const { data } = useFeedback();
 
   if (isMatchInProgress && location.pathname === "/match") {
     return null;
@@ -43,7 +52,6 @@ export function BottomNav() {
     setShow(false);
     await supabase.auth.signOut();
     resetPelada();
-    setShow(false);
   }
 
   if (isMatchInProgress) {
@@ -63,34 +71,95 @@ export function BottomNav() {
   }
 
   const navItems = [
-    { icon: TvMinimalPlay, label: "Partida", path: "/match" },
-    { icon: ListChevronsUpDown, label: "Fila", path: "/match/organize" },
-    { icon: House, label: "Início", path: "/" },
-    { icon: ListOrdered, label: "Jogadores", path: "/players" },
-    { icon: MoreHorizontal, label: "Mais" },
+    {
+      icon: TvMinimalPlay,
+      label: "Partida",
+      path: "/match",
+    },
+    {
+      icon: ListChevronsUpDown,
+      label: "Fila",
+      path: "/match/organize",
+    },
+    {
+      icon: House,
+      label: "Início",
+      path: "/",
+    },
+    {
+      icon: ListOrdered,
+      label: "Jogadores",
+      path: "/players",
+    },
+    {
+      icon: MoreHorizontal,
+      label: "Mais",
+    },
   ];
 
-  const sheetItems = [
-    { icon: Users, label: "Times", path: "/teams" },
-    { icon: History, label: "Histórico de partidas", path: "/history" },
-    { icon: ClipboardList, label: "Resumos", path: "/summaries" },
+  const peladaItems: MenuItem[] = [
+    {
+      icon: Users,
+      label: "Times",
+      path: "/teams",
+    },
+    {
+      icon: History,
+      label: "Histórico de partidas",
+      path: "/history",
+    },
+    {
+      icon: ClipboardList,
+      label: "Resumos",
+      path: "/summaries",
+    },
+  ];
+
+  const appItems: MenuItem[] = [
     {
       icon: Download,
       label: "Instalar aplicativo",
       path: "/install",
     },
-    { icon: MessageSquareMore, label: "Enviar sugestão", path: "/suggestions" },
-    ...(isAdmin
-      ? [
-          {
-            icon: MessagesSquare,
-            label: "Feedbacks",
-            path: "/feedbacks",
-            badge: data?.length,
-          },
-        ]
-      : []),
+    {
+      icon: MessageSquareMore,
+      label: "Enviar sugestão",
+      path: "/suggestions",
+    },
   ];
+
+  const adminItems: MenuItem[] = isAdmin
+    ? [
+        {
+          icon: MessagesSquare,
+          label: "Feedbacks",
+          path: "/feedbacks",
+          badge: data?.length,
+        },
+      ]
+    : [];
+
+  const renderMenuItem = ({ icon: Icon, label, path, badge }: MenuItem) => (
+    <button
+      key={path}
+      type="button"
+      onClick={() => {
+        setShow(false);
+        navigate(path);
+      }}
+      className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-zinc-300 transition-colors hover:bg-zinc-800/70 active:scale-[0.99]"
+    >
+      <Icon className="size-5 text-zinc-500" />
+
+      <span className="flex-1 text-sm font-medium">{label}</span>
+
+      {badge !== undefined && badge > 0 && (
+        <span className="flex min-w-5 items-center justify-center rounded-full bg-red-500 px-1.5 py-0.5 text-[11px] font-semibold text-white">
+          {badge}
+        </span>
+      )}
+    </button>
+  );
 
   return (
     <div className="fixed right-0 bottom-0 left-0 z-40 border-t border-zinc-800 bg-zinc-900 pb-5">
@@ -98,9 +167,11 @@ export function BottomNav() {
         {navItems.map(({ icon: Icon, label, path }) => {
           const isActive =
             location.pathname === path || (label === "Mais" && show);
+
           return (
             <button
               key={label}
+              type="button"
               onClick={() => {
                 if (!path) {
                   setShow(true);
@@ -123,54 +194,66 @@ export function BottomNav() {
       </div>
 
       <BottomSheet open={show} onClose={() => setShow(false)} title="">
-        <div className="space-y-4">
-          <div className="flex items-center gap-4 rounded-2xl border border-zinc-800 bg-zinc-800/50 p-4">
+        <div className="space-y-6">
+          <div className="flex items-center gap-3 px-2">
             <img
               src={user?.user_metadata?.avatar_url}
               alt=""
-              className="size-14 rounded-full border border-zinc-700"
+              className="size-11 rounded-full border border-zinc-700"
             />
 
-            <div className="min-w-0 flex-1">
-              <h3 className="truncate font-semibold text-white">
+            <div className="min-w-0">
+              <h3 className="truncate text-sm font-semibold text-white">
                 {user?.user_metadata?.full_name}
               </h3>
 
-              <p className="truncate text-sm text-zinc-500">{user?.email}</p>
+              <p className="truncate text-xs text-zinc-500">{user?.email}</p>
             </div>
           </div>
 
-          <div className="space-y-2">
-            {sheetItems.map(({ icon: Icon, label, path, badge }) => (
-              <button
-                onClick={() => {
-                  setShow(false);
-                  navigate(path);
-                }}
-                className="flex w-full items-center gap-3 rounded-2xl border border-zinc-800 bg-zinc-800/50 p-4 text-left text-zinc-200 transition-colors hover:bg-zinc-800"
-              >
-                <div className="flex items-center gap-3">
-                  <Icon className="size-5 text-emerald-400" />
-                  <span className="font-medium">{label}</span>
-                </div>
-                {badge !== undefined && badge > 0 && (
-                  <span className="flex min-w-5 items-center justify-center rounded-full bg-red-500 px-2 py-0.5 text-xs font-semibold text-white">
-                    {badge}
-                  </span>
-                )}
-              </button>
-            ))}
+          <MenuSection title="Pelada">
+            {peladaItems.map(renderMenuItem)}
+          </MenuSection>
 
+          <MenuSection title="Aplicativo">
+            {appItems.map(renderMenuItem)}
+          </MenuSection>
+
+          {adminItems.length > 0 && (
+            <MenuSection title="Administração">
+              {adminItems.map(renderMenuItem)}
+            </MenuSection>
+          )}
+
+          <div className="border-t border-zinc-800 pt-3">
             <button
+              type="button"
               onClick={signOut}
-              className="flex w-full items-center gap-3 rounded-2xl border border-red-900/30 bg-red-950/20 p-4 text-left text-red-400 transition-colors hover:bg-red-950/40"
+              className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-red-400 transition-colors hover:bg-red-950/20 active:scale-[0.99]"
             >
               <LogOut className="size-5" />
-              <span className="font-medium">Sair</span>
+              <span className="text-sm font-medium">Sair</span>
             </button>
           </div>
         </div>
       </BottomSheet>
     </div>
+  );
+}
+
+interface MenuSectionProps {
+  title: string;
+  children: React.ReactNode;
+}
+
+function MenuSection({ title, children }: MenuSectionProps) {
+  return (
+    <section>
+      <p className="mb-1 px-3 text-[11px] font-semibold tracking-wider text-zinc-600 uppercase">
+        {title}
+      </p>
+
+      <div className="space-y-0.5">{children}</div>
+    </section>
   );
 }
