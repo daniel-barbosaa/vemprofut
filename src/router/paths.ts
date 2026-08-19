@@ -13,4 +13,5 @@ export const paths = {
   installApp: "/install",
   suggestions: "/suggestions",
   feedbacks: "/feedbacks",
+  landingPage: "/landing-page",
 } as const;

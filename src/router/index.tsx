@@ -5,6 +5,7 @@ import { Feedbacks } from "@/view/pages/feedbacks";
 import { History } from "@/view/pages/history";
 import { Home } from "@/view/pages/home/home";
 import { InstallApp } from "@/view/pages/install-app";
+import { LandingPage } from "@/view/pages/landing-page";
 import { Match } from "@/view/pages/match";
 import { MatchResult } from "@/view/pages/match-result";
 import { OrganizeNextMatch } from "@/view/pages/organize";
@@ -60,6 +61,7 @@ export function Router() {
 
         <Route element={<AuthGuard isPrivate={false} />}>
           <Route element={<SignIn />} path={paths.signIn} />
+          <Route element={<LandingPage />} path={paths.landingPage} />
         </Route>
       </Routes>
     </BrowserRouter>
