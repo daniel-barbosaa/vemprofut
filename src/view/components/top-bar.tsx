@@ -9,9 +9,10 @@ import { Button } from "./button";
 interface TopBarProps {
   title?: string;
   collapsed?: boolean;
+  backTo?: string;
 }
 
-export function TopBar({ title, collapsed }: TopBarProps) {
+export function TopBar({ title, collapsed, backTo }: TopBarProps) {
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
 
@@ -34,7 +35,7 @@ export function TopBar({ title, collapsed }: TopBarProps) {
         <div className="flex items-center gap-3 py-4">
           {!isMatchResultScreen && (
             <Button
-              onClick={() => navigate(-1)}
+              onClick={() => (backTo ? navigate(backTo) : navigate(-1))}
               aria-label="Voltar"
               className="size-10 rounded-full border border-zinc-800 bg-zinc-950 hover:border-zinc-700 hover:bg-zinc-900 active:scale-95"
             >

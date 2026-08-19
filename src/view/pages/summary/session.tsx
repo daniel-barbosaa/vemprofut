@@ -1,7 +1,7 @@
 import type { Pelada } from "@/store/pelada/types";
 import { Screen } from "@/view/components/screen";
 import { toPng } from "html-to-image";
-import { Download, Share2 } from "lucide-react";
+import { Download, Share2, Star } from "lucide-react";
 import { motion } from "motion/react";
 import { useRef, type RefObject } from "react";
 import { Navigate, useLocation, useNavigate, useParams } from "react-router";
@@ -20,7 +20,7 @@ function SummaryActions({ summaryRef }: SummaryActionsProps) {
 
     return await toPng(summaryRef.current, {
       cacheBust: true,
-      pixelRatio: 2,
+      pixelRatio: 3,
     });
   }
 
@@ -103,10 +103,12 @@ export function SessionSummary() {
   const summaryRef = useRef<HTMLDivElement>(null);
 
   const summary = state?.summary as SummaryCard | undefined;
+  console.log(summary);
 
   if (!summary) {
     return <Navigate to="/summaries" />;
   }
+  console.log(summary);
 
   const sessionDate = new Date(summary.pelada.createdAt).toLocaleDateString(
     "pt-BR",
@@ -117,192 +119,217 @@ export function SessionSummary() {
     },
   );
 
+  const bestStreakTeams = summary.stats.bestStreak
+    .map((team) => team.name)
+    .join(" e ");
+
+  const highlights = [
+    {
+      icon: "🔥",
+      title: "Maior sequência",
+      player: bestStreakTeams,
+      description: `Alcançaram ${summary.stats.bestStreak[0].maxStreak} vitórias consecutivas.`,
+    },
+    {
+      icon: "⚡",
+      title: "Mais vitórias",
+      player: summary.stats.champion.name,
+      description: `Terminou a noite com ${summary.stats.champion.wins} vitórias.`,
+    },
+  ];
+
   return (
     <Screen>
       <motion.div
         ref={summaryRef}
-        initial={{ opacity: 0, scale: 0.95 }}
+        initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
         id="pelada-summary-card"
-        className="flex aspect-9/16 flex-col overflow-hidden rounded-3xl border-2 border-zinc-800 bg-linear-to-br from-zinc-900 via-zinc-900 to-zinc-950"
+        className="relative mx-auto flex aspect-9/16 w-full max-w-105 flex-col overflow-hidden rounded-[28px] border border-white/8 bg-[#06100c] text-white shadow-[0_30px_100px_rgba(0,0,0,0.65)]"
       >
-        <div className="relative shrink-0 overflow-hidden bg-linear-to-r from-emerald-600 to-emerald-500 p-3 text-center">
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-0 right-0 -mt-10 -mr-10 size-20 rounded-full bg-white" />
-          </div>
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="absolute -top-32 -right-32 size-80 rounded-full bg-emerald-500/10 blur-[90px]" />
+          <div className="absolute top-1/2 -left-40 size-80 rounded-full bg-emerald-500/5 blur-[100px]" />
+          <div className="absolute right-0 -bottom-40 size-72 rounded-full bg-emerald-900/10 blur-[100px]" />
+        </div>
 
-          <div className="relative z-10">
-            <div className="text-xl">⚽</div>
+        <div className="relative z-10 px-6 pt-6">
+          <div className="flex items-start justify-between">
+            <div>
+              <div className="mb-2 flex items-center gap-2">
+                <div className="flex size-7 items-center justify-center rounded-lg bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.25)]">
+                  <span className="text-sm">⚽</span>
+                </div>
 
-            <h1 className="text-base font-bold text-white capitalize">
-              {summary.pelada.name}
-            </h1>
+                <span className="text-[9px] font-black tracking-[0.18em] text-emerald-400 uppercase">
+                  VemProFut
+                </span>
+              </div>
 
-            <p className="text-[10px] font-semibold tracking-wider text-emerald-100 uppercase">
-              Resumo da Resenha
-            </p>
+              <h1 className="max-w-62.5 truncate text-[17px] font-black tracking-[-0.4px] text-white">
+                {summary.pelada.name}
+              </h1>
 
-            <p className="mt-0.5 text-[10px] text-emerald-200/80">
-              📅 {sessionDate}
-            </p>
+              <p className="mt-0.5 text-[9px] font-medium text-zinc-600">
+                {sessionDate}
+              </p>
+            </div>
+
+            <div className="flex items-center justify-center rounded-full border border-white/[0.07] bg-white/[0.035] p-2">
+              <span className="block pt-0.5 text-[7px] font-black tracking-[0.14em] text-zinc-500 uppercase">
+                Resumo
+              </span>
+            </div>
           </div>
         </div>
 
-        <div className="flex-1 space-y-2 overflow-hidden px-3 py-2">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="relative overflow-hidden rounded-xl border border-yellow-500/50 bg-linear-to-br from-yellow-600/30 to-amber-600/30 p-3"
-          >
-            <div className="absolute top-0 right-0 text-6xl opacity-10">🏆</div>
+        <div className="relative z-10 px-6 pt-7 text-center">
+          <div className="flex items-center justify-center gap-2">
+            <div className="h-px w-8 bg-linear-to-r from-transparent to-yellow-500/40" />
 
-            <div className="relative z-10 text-center">
-              <div className="mb-1 text-[10px] font-black tracking-widest text-yellow-400 uppercase">
-                🏆 Melhor time
+            <span className="text-[8px] font-black tracking-[0.18em] text-yellow-400 uppercase">
+              🏆 Campeão da noite
+            </span>
+
+            <div className="h-px w-8 bg-linear-to-l from-transparent to-yellow-500/40" />
+          </div>
+
+          <h2 className="mt-2 text-[32px] leading-none font-black tracking-[-1.5px] text-white">
+            {summary.stats.champion.name}
+          </h2>
+
+          <div className="mt-4 flex items-center justify-center gap-7">
+            <div>
+              <div className="text-[23px] font-black text-emerald-400">
+                {summary.stats.champion.wins}
               </div>
 
-              <h3 className="mb-2 truncate text-2xl font-black text-white">
-                {summary.stats.champion.name}
-              </h3>
-
-              <div className="flex items-center justify-center gap-3">
-                <div>
-                  <div className="text-2xl font-black text-yellow-400">
-                    {summary.stats.champion.wins}
-                  </div>
-
-                  <div className="text-[10px] font-bold text-yellow-200/70">
-                    vitórias
-                  </div>
-                </div>
-
-                <div className="h-8 w-px bg-yellow-500/30" />
-
-                <div>
-                  <div className="text-2xl font-black text-yellow-400">
-                    {summary.stats.champion.winRate}%
-                  </div>
-
-                  <div className="text-[10px] font-bold text-yellow-200/70">
-                    aproveit.
-                  </div>
-                </div>
+              <div className="text-[7px] font-bold tracking-[0.12em] text-zinc-600 uppercase">
+                Vitórias
               </div>
             </div>
-          </motion.div>
 
-          {summary.stats.bestStreak?.maxStreak > 0 &&
-            summary.stats.bestStreak?.id !== summary.stats.champion.id && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="rounded-xl border border-orange-700/40 bg-orange-900/20 p-3"
-              >
-                <div className="mb-1 flex items-center gap-1 text-xs font-bold tracking-wide text-orange-400 uppercase">
-                  🔥 Rei da Sequência
-                </div>
-                <div className="text-sm font-bold text-white">
-                  {summary.stats.bestStreak?.name}
-                </div>
-                <div className="mt-0.5 text-xs text-orange-300">
-                  Atingiu o limite de 2 vitórias seguidas{" "}
-                  {summary.stats.bestStreak?.maxStreak}{" "}
-                  {summary.stats.bestStreak?.maxStreak > 1 ? "vezes" : "vez"}
-                </div>
-              </motion.div>
-            )}
+            <div className="h-7 w-px bg-zinc-800" />
 
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="rounded-xl border border-zinc-700 bg-zinc-800/50 p-2.5"
-          >
-            <div className="mb-2 flex items-center gap-1 text-xs font-bold tracking-wide text-emerald-400 uppercase">
-              🥉 Elenco Campeão
+            <div>
+              <div className="text-[23px] font-black text-emerald-400">
+                {summary.stats.champion.winRate}%
+              </div>
+
+              <div className="text-[7px] font-bold tracking-[0.12em] text-zinc-600 uppercase">
+                Aproveitamento
+              </div>
             </div>
-            <div className="grid grid-cols-2 gap-1.5">
+          </div>
+        </div>
+
+        <div className="relative z-10 px-6 pt-5">
+          <div className="rounded-2xl border border-white/6 bg-white/2.5 p-3">
+            <div className="mb-2.5 flex items-center justify-between">
+              <span className="text-[8px] font-black tracking-[0.14em] text-zinc-600 uppercase">
+                Elenco campeão
+              </span>
+
+              <span className="text-[8px] font-bold text-emerald-400">
+                {summary.stats.champion.players.length} jogadores
+              </span>
+            </div>
+
+            <div className="grid grid-cols-2 gap-x-4 gap-y-1.5">
               {summary.stats.champion.players
                 .slice(0, 6)
                 .map((player, index) => (
                   <div
                     key={player.id}
-                    className="flex items-center gap-1.5 text-xs font-medium text-white"
+                    className="flex min-w-0 items-center gap-1.5"
                   >
-                    <div className="flex size-4 shrink-0 items-center justify-center rounded-full bg-emerald-500/20">
-                      <span className="text-[10px] font-bold text-emerald-400">
-                        {index + 1}
-                      </span>
-                    </div>
-                    <span className="truncate">{player.name}</span>
+                    <span className="flex size-4 shrink-0 items-center justify-center rounded-full bg-emerald-500/10 text-[7px] font-black text-emerald-400">
+                      {index + 1}
+                    </span>
+
+                    <span className="truncate text-[8px] font-semibold text-zinc-400">
+                      {player.name}
+                    </span>
                   </div>
                 ))}
             </div>
-          </motion.div>
+          </div>
+        </div>
 
-          {summary.stats.balancedMatch && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="rounded-xl border border-blue-700/40 bg-blue-900/20 p-2.5"
-            >
-              <div className="mb-1 flex items-center gap-1 text-xs font-bold tracking-wide text-blue-400 uppercase">
-                ⚔️ Jogo da Noite
+        {summary.stats.balancedMatch && (
+          <div className="relative z-10 px-6 pt-2.5">
+            <div className="rounded-2xl border border-blue-500/10 bg-blue-500/4.5 p-3">
+              <div className="mb-2 flex items-center justify-between">
+                <span className="text-[8px] font-black tracking-[0.14em] text-blue-400 uppercase">
+                  ⚔️ Jogo da noite
+                </span>
+
+                <span className="rounded-full bg-blue-500/10 px-2 py-0.5 text-[7px] font-bold text-blue-300">
+                  Mais equilibrado
+                </span>
               </div>
-              <div className="flex items-center justify-center gap-3">
-                <div className="flex-1 text-center">
-                  <div className="mb-1 truncate text-xs font-bold text-white">
+
+              <div className="grid grid-cols-[1fr_auto_1fr] items-center">
+                <div className="text-center">
+                  <div className="truncate text-[9px] font-bold text-white">
                     {summary.stats.balancedMatch.teamA.name}
                   </div>
-                  <div className="text-2xl font-black text-blue-400">
+
+                  <div className="mt-0.5 text-[23px] font-black text-blue-400">
                     {summary.stats.balancedMatch.teamA.score}
                   </div>
                 </div>
-                <div className="text-xl font-bold text-zinc-600">×</div>
-                <div className="flex-1 text-center">
-                  <div className="mb-1 truncate text-xs font-bold text-white">
+
+                <span className="px-3 text-xs font-black text-zinc-700">×</span>
+
+                <div className="text-center">
+                  <div className="truncate text-[9px] font-bold text-white">
                     {summary.stats.balancedMatch.teamB.name}
                   </div>
-                  <div className="text-2xl font-black text-blue-400">
+
+                  <div className="mt-0.5 text-[23px] font-black text-blue-400">
                     {summary.stats.balancedMatch.teamB.score}
                   </div>
                 </div>
               </div>
-            </motion.div>
-          )}
+            </div>
+          </div>
+        )}
 
-          {summary.stats.worstTeam &&
-            summary.stats.worstTeam.id !== summary.stats.champion.id && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                className="rounded-xl border border-red-800/30 bg-red-900/10 p-2.5"
-              >
-                <div className="mb-1 flex items-center gap-1 text-xs font-bold tracking-wide text-red-400 uppercase">
-                  🔦 Lanterninha
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="text-sm font-bold text-white">
-                    {summary.stats.worstTeam.name}
-                  </div>
-                  <div className="text-xs text-red-400">
-                    {summary.stats.worstTeam.wins} vitória
-                    {summary.stats.worstTeam.wins !== 1 ? "s" : ""} •{" "}
-                    {summary.stats.worstTeam.winRate}%
-                  </div>
-                </div>
-              </motion.div>
-            )}
-        </div>
+        <div className="relative z-10 flex-1 overflow-hidden px-6 pt-2.5">
+          <div className="rounded-2xl border border-white/6 bg-white/2 p-3">
+            <div className="mb-2.5 flex items-center gap-2 text-[8px] font-black tracking-[0.14em] text-zinc-600 uppercase">
+              <Star className="size-3" />
+              Momentos da noite
+            </div>
 
-        <div className="border-t border-zinc-800 bg-zinc-900/80 p-2.5 text-center backdrop-blur-sm">
-          <p className="text-xs font-semibold text-zinc-500">
-            Gerado por VemProFut
-          </p>
+            <div className="space-y-2">
+              {highlights.map((highlight) => (
+                <div
+                  key={`${highlight.icon}-${highlight.player}`}
+                  className="flex items-start gap-2.5"
+                >
+                  <div className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-white/4 text-sm">
+                    {highlight.icon}
+                  </div>
+
+                  <div className="min-w-0">
+                    <div className="text-[8px] font-black text-white">
+                      {highlight.title}
+                    </div>
+
+                    <div className="text-[9px] font-bold text-emerald-400">
+                      {highlight.player}
+                    </div>
+
+                    <p className="mt-0.5 text-[7px] leading-relaxed text-zinc-600">
+                      {highlight.description}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </motion.div>
 

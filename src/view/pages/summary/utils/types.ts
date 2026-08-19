@@ -1,4 +1,4 @@
-import type { Match, Player } from "@/store/pelada/types";
+import type { Match, Pelada, Player } from "@/store/pelada/types";
 
 export interface SummaryItem {
   champion: {
@@ -11,8 +11,15 @@ export interface SummaryItem {
   bestStreak: {
     id: string;
     name: string;
+    players: Pelada["players"];
+    wins: number;
+    losses: number;
+    draws: number;
     maxStreak: number;
-  };
+    currentStreak: number;
+    totalMatches: number;
+    winRate: number;
+  }[];
   worstTeam: {
     id: string;
     name: string;

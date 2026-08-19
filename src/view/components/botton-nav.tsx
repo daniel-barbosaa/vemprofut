@@ -7,12 +7,14 @@ import {
   Download,
   History,
   House,
+  ListChevronsUpDown,
   ListOrdered,
   LogOut,
   MessageSquareMore,
   MessagesSquare,
   MoreHorizontal,
   Trophy,
+  TvMinimalPlay,
   Users,
 } from "lucide-react";
 
@@ -61,16 +63,17 @@ export function BottomNav() {
   }
 
   const navItems = [
-    { icon: Trophy, label: "Partida", path: "/match" },
-    { icon: Users, label: "Times", path: "/teams" },
+    { icon: TvMinimalPlay, label: "Partida", path: "/match" },
+    { icon: ListChevronsUpDown, label: "Fila", path: "/match/organize" },
     { icon: House, label: "Início", path: "/" },
     { icon: ListOrdered, label: "Jogadores", path: "/players" },
     { icon: MoreHorizontal, label: "Mais" },
   ];
 
   const sheetItems = [
-    { icon: ClipboardList, label: "Resumos", path: "/summaries" },
+    { icon: Users, label: "Times", path: "/teams" },
     { icon: History, label: "Histórico de partidas", path: "/history" },
+    { icon: ClipboardList, label: "Resumos", path: "/summaries" },
     {
       icon: Download,
       label: "Instalar aplicativo",

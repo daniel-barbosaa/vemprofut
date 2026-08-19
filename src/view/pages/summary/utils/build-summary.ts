@@ -59,6 +59,7 @@ export function buildSummary(pelada: Pelada): SummaryItem | null {
 
       winnerStats.wins += 1;
       winnerStats.currentStreak += 1;
+
       winnerStats.maxStreak = Math.max(
         winnerStats.maxStreak,
         winnerStats.currentStreak,
@@ -89,24 +90,34 @@ export function buildSummary(pelada: Pelada): SummaryItem | null {
     }
   }
 
-  const teams = Array.from(teamStats.values()).map((team) => ({
-    ...team,
-    totalMatches: team.wins + team.losses + team.draws,
-    winRate:
-      team.wins + team.losses + team.draws > 0
-        ? Math.round((team.wins / (team.wins + team.losses + team.draws)) * 100)
-        : 0,
-  }));
+  const teams = Array.from(teamStats.values()).map((team) => {
+    const totalMatches = team.wins + team.losses + team.draws;
+
+    return {
+      ...team,
+      totalMatches,
+      winRate:
+        totalMatches > 0 ? Math.round((team.wins / totalMatches) * 100) : 0,
+    };
+  });
 
   const champion = [...teams].sort((a, b) => {
-    if (b.wins !== a.wins) return b.wins - a.wins;
+    if (b.wins !== a.wins) {
+      return b.wins - a.wins;
+    }
+
     return b.winRate - a.winRate;
   })[0];
 
-  const bestStreak = [...teams].sort((a, b) => b.maxStreak - a.maxStreak)[0];
+  const highestStreak = Math.max(...teams.map((team) => team.maxStreak));
+
+  const bestStreak = teams.filter((team) => team.maxStreak === highestStreak);
 
   const worstTeam = [...teams].sort((a, b) => {
-    if (a.wins !== b.wins) return a.wins - b.wins;
+    if (a.wins !== b.wins) {
+      return a.wins - b.wins;
+    }
+
     return a.winRate - b.winRate;
   })[0];
 

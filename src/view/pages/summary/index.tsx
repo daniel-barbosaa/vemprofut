@@ -33,7 +33,7 @@ export function Summaries() {
 
   return (
     <>
-      <TopBar collapsed={collapsed} title="Sessões anteriores" />
+      <TopBar collapsed={collapsed} title="Sessões anteriores" backTo="/" />
 
       <div className="px-6">
         <div className="mb-6">
