@@ -28,6 +28,7 @@ export function MatchResult() {
       <TopBar
         title={isDraw ? "Empate!" : "Partida Finalizada!"}
         collapsed={collapsed}
+        showMenu
       />
       <ResultHeader
         isDraw={isDraw}

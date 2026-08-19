@@ -1,4 +1,5 @@
 import type { Pelada } from "@/store/pelada/types";
+import { MoveRight } from "lucide-react";
 import { motion } from "motion/react";
 
 interface ReturnedTeamBannerProps {
@@ -21,7 +22,9 @@ export function ReturnedTeamBanner({ pelada }: ReturnedTeamBannerProps) {
       className="mb-6 rounded-xl border border-amber-600/50 bg-linear-to-r from-amber-900/40 to-yellow-900/40 p-5"
     >
       <div className="flex items-center gap-3">
-        <div className="text-3xl">👑</div>
+        <div className="text-3xl">
+          <MoveRight className="size-7 text-amber-400" />
+        </div>
         <div>
           <div className="font-bold text-amber-300">
             {playingTeams[0]?.justReturned

@@ -66,6 +66,7 @@ export const usePeladaStore = create<Store>()(
           pelada: {
             ...pelada,
             currentMatch: match,
+            sessionStarted: true,
           },
         });
       },
@@ -130,13 +131,16 @@ export const usePeladaStore = create<Store>()(
           sessionPlayers: [],
           matches: [],
           queue: [],
+          sessionStarted: false,
         };
         set({ pelada: newPelada });
         return newPelada;
       },
       addPlayer: (name: string) => {
         const { pelada } = get();
-        if (!pelada) return;
+        if (!pelada || pelada.sessionStarted) {
+          return;
+        }
 
         const newPlayer: Player = {
           id: uuid(),
@@ -153,7 +157,9 @@ export const usePeladaStore = create<Store>()(
       },
       removePlayer: (playerId: string) => {
         const { pelada } = get();
-        if (!pelada) return;
+        if (!pelada || pelada.sessionStarted) {
+          return;
+        }
 
         set({
           pelada: {
@@ -165,7 +171,9 @@ export const usePeladaStore = create<Store>()(
       drawTeams: () => {
         const pelada = get().pelada;
 
-        if (!pelada) return;
+        if (!pelada || pelada.sessionStarted) {
+          return;
+        }
 
         const shuffled = [...pelada.players].sort(() => Math.random() - 0.5);
 

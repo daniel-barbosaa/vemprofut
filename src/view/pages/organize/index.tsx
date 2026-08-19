@@ -49,7 +49,11 @@ export function OrganizeNextMatch() {
   return (
     <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
       <>
-        <TopBar title=" Organizar Próxima Rodada" collapsed={collapsed} />
+        <TopBar
+          title=" Organizar Próxima Rodada"
+          collapsed={collapsed}
+          showMenu
+        />
 
         <div className="p-6">
           <div className="mb-8">

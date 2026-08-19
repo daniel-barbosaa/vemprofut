@@ -10,9 +10,10 @@ interface TopBarProps {
   title?: string;
   collapsed?: boolean;
   backTo?: string;
+  showMenu?: boolean;
 }
 
-export function TopBar({ title, collapsed, backTo }: TopBarProps) {
+export function TopBar({ title, collapsed, backTo, showMenu }: TopBarProps) {
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
 
@@ -22,7 +23,6 @@ export function TopBar({ title, collapsed, backTo }: TopBarProps) {
   ];
 
   const isMatchResultScreen = useLocation().pathname === paths.matchResult;
-  const isCreatePeladaScreen = useLocation().pathname === paths.create;
 
   return (
     <div
@@ -54,7 +54,7 @@ export function TopBar({ title, collapsed, backTo }: TopBarProps) {
           </h1>
         </div>
 
-        {!isCreatePeladaScreen && (
+        {showMenu && (
           <>
             <button
               onClick={() => setShow(true)}

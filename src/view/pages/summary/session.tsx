@@ -103,12 +103,10 @@ export function SessionSummary() {
   const summaryRef = useRef<HTMLDivElement>(null);
 
   const summary = state?.summary as SummaryCard | undefined;
-  console.log(summary);
 
   if (!summary) {
     return <Navigate to="/summaries" />;
   }
-  console.log(summary);
 
   const sessionDate = new Date(summary.pelada.createdAt).toLocaleDateString(
     "pt-BR",

@@ -14,16 +14,22 @@ export function Players() {
   const navigate = useNavigate();
 
   const [show, setShow] = useState(false);
-
   const [newPlayerName, setNewPlayerName] = useState("");
 
-  const totalPlayers = pelada?.players.length || 0;
+  const totalPlayers = pelada?.players.length ?? 0;
+
   const hasDrawnTeams = Boolean(pelada?.queue.length);
 
-  const handleAddPlayer = () => {
-    if (!newPlayerName.trim()) return;
+  const sessionStarted = Boolean(pelada?.sessionStarted);
 
-    addPlayer(newPlayerName.trim());
+  const canEditPlayers = !sessionStarted;
+
+  const handleAddPlayer = () => {
+    const name = newPlayerName.trim();
+
+    if (!name) return;
+
+    addPlayer(name);
 
     setNewPlayerName("");
     setShow(false);
@@ -31,27 +37,46 @@ export function Players() {
 
   const handleContinue = () => {
     if (hasDrawnTeams) {
-      navigate("/");
+      navigate("/teams");
       return;
     }
 
     navigate("/draw");
   };
 
+  if (!pelada) {
+    return null;
+  }
+
   return (
     <Screen>
-      <div className="mb-8 flex items-center justify-between">
-        <div>
-          <h1 className="mb-1 text-3xl font-bold text-white">Jogadores</h1>
-
+      <div className="mb-8">
+        <h1 className="mb-1 text-3xl font-bold text-white">Jogadores</h1>
+        <div className="flex items-center gap-2">
           <p className="text-zinc-500">{totalPlayers} jogadores</p>
+          {hasDrawnTeams && (
+            <>
+              <span className="text-zinc-700">•</span>
+
+              <span className="text-xs font-medium text-emerald-400">
+                Times sorteados
+              </span>
+            </>
+          )}
         </div>
+        {sessionStarted && (
+          <div className="mt-2 mb-5 flex items-center gap-2.5 rounded-xl border border-zinc-800 bg-zinc-900/60 px-3.5 py-3">
+            <div className="size-2 shrink-0 rounded-full bg-emerald-400" />
+
+            <p className="text-sm text-zinc-400">Pelada em andamento</p>
+          </div>
+        )}
       </div>
 
       {totalPlayers === 0 && (
         <button
           onClick={() => setShow(true)}
-          className="flex w-full flex-col items-center justify-center rounded-3xl border border-zinc-800 bg-zinc-900/50 p-10 text-center transition-all hover:border-emerald-500/40 hover:bg-zinc-900"
+          className="flex w-full flex-col items-center justify-center rounded-3xl border border-zinc-800 bg-zinc-900/50 p-10 text-center transition-colors hover:border-emerald-500/40 hover:bg-zinc-900"
         >
           <div className="mb-4 flex size-16 items-center justify-center rounded-full bg-zinc-800">
             <Plus className="size-8 text-zinc-400" />
@@ -62,8 +87,7 @@ export function Players() {
           </h2>
 
           <p className="max-w-xs text-sm text-zinc-500">
-            Comece adicionando os jogadores da pelada para realizar o sorteio
-            dos times.
+            Comece adicionando os jogadores da pelada.
           </p>
         </button>
       )}
@@ -71,7 +95,7 @@ export function Players() {
       <div className="pb-30">
         {totalPlayers > 0 && (
           <div className="space-y-2">
-            {pelada?.players.map((player, index) => (
+            {pelada.players.map((player, index) => (
               <motion.div
                 key={player.id}
                 initial={{ opacity: 0, x: -15 }}
@@ -79,7 +103,10 @@ export function Players() {
                 transition={{
                   delay: index * 0.04,
                 }}
-                className="flex items-center justify-between rounded-2xl border border-zinc-800 bg-zinc-900 p-4"
+                className={cn(
+                  "flex items-center justify-between rounded-2xl border border-zinc-800 bg-zinc-900 p-4",
+                  sessionStarted && "opacity-90",
+                )}
               >
                 <div className="flex items-center gap-3">
                   <div className="flex size-10 items-center justify-center rounded-full bg-zinc-800">
@@ -93,47 +120,53 @@ export function Players() {
                   </span>
                 </div>
 
-                <button
-                  onClick={() => removePlayer(player.id)}
-                  className="rounded-lg p-2 text-red-400 transition-colors hover:bg-zinc-800 hover:text-red-300"
-                >
-                  <Trash2 className="size-5" />
-                </button>
+                {canEditPlayers && (
+                  <button
+                    onClick={() => removePlayer(player.id)}
+                    aria-label={`Remover ${player.name}`}
+                    className="rounded-lg p-2 text-zinc-500 transition-colors hover:bg-zinc-800 hover:text-red-400"
+                  >
+                    <Trash2 className="size-5" />
+                  </button>
+                )}
               </motion.div>
             ))}
           </div>
         )}
-        {hasDrawnTeams && totalPlayers < 10 && (
-          <p className="mb-3 p-2 text-center text-sm text-zinc-500">
-            Faltam {10 - totalPlayers} jogadores para o sorteio mínimo
+
+        {!hasDrawnTeams && totalPlayers > 0 && totalPlayers < 10 && (
+          <p className="mt-4 text-center text-sm text-zinc-500">
+            Faltam {10 - totalPlayers} jogadores para realizar o sorteio
           </p>
         )}
       </div>
 
-      <BottomSheet
-        open={show}
-        onClose={() => setShow(false)}
-        title="Adicionar Jogador"
-      >
-        <div className="flex flex-col gap-3">
-          <input
-            type="text"
-            value={newPlayerName}
-            onChange={(e) => setNewPlayerName(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleAddPlayer()}
-            placeholder="Nome do jogador"
-            autoFocus
-            className="rounded-2xl border border-zinc-700 bg-zinc-800 px-4 py-4 text-lg text-white transition-colors focus:border-emerald-500 focus:outline-none"
-          />
+      {canEditPlayers && (
+        <BottomSheet
+          open={show}
+          onClose={() => setShow(false)}
+          title="Adicionar Jogador"
+        >
+          <div className="flex flex-col gap-3">
+            <input
+              type="text"
+              value={newPlayerName}
+              onChange={(e) => setNewPlayerName(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleAddPlayer()}
+              placeholder="Nome do jogador"
+              autoFocus
+              className="rounded-2xl border border-zinc-700 bg-zinc-800 px-4 py-4 text-lg text-white transition-colors focus:border-emerald-500 focus:outline-none"
+            />
 
-          <button
-            onClick={handleAddPlayer}
-            className="flex h-14 items-center justify-center rounded-2xl bg-emerald-500 font-semibold text-white transition-colors hover:bg-emerald-600"
-          >
-            Adicionar
-          </button>
-        </div>
-      </BottomSheet>
+            <button
+              onClick={handleAddPlayer}
+              className="flex h-14 items-center justify-center rounded-2xl bg-emerald-500 font-semibold text-white transition-colors hover:bg-emerald-600"
+            >
+              Adicionar
+            </button>
+          </div>
+        </BottomSheet>
+      )}
 
       {totalPlayers >= 1 && (
         <div className="fixed right-0 bottom-22 left-0 z-30 p-4">
@@ -142,36 +175,38 @@ export function Players() {
               onClick={handleContinue}
               disabled={!hasDrawnTeams && totalPlayers < 10}
               className={cn(
-                "hover:bg-zinc-800",
+                "active:scale-[0.98]",
                 hasDrawnTeams || totalPlayers >= 10
-                  ? "bg-emerald-500 text-white hover:bg-emerald-600 active:scale-[0.98]"
+                  ? "bg-emerald-500 text-white hover:bg-emerald-600"
                   : "cursor-not-allowed bg-zinc-800 text-zinc-500",
               )}
             >
-              {hasDrawnTeams ? "Próxima Partida" : "Sortear Times"}
+              {hasDrawnTeams ? "Ver Times" : "Sortear Times"}
+
               <ArrowRight className="size-5" />
             </Button>
           </div>
         </div>
       )}
 
-      {totalPlayers > 0 && (
+      {totalPlayers > 0 && canEditPlayers && (
         <motion.button
           onClick={() => setShow(true)}
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           whileTap={{ scale: 0.92 }}
-          whileHover={{ scale: 1.05 }}
           transition={{
             type: "spring",
             stiffness: 450,
             damping: 24,
           }}
+          aria-label="Adicionar jogador"
           className="fixed right-5 bottom-45 z-40 flex size-16 items-center justify-center rounded-full bg-emerald-500 text-white shadow-xl shadow-emerald-500/30"
         >
           <Plus className="size-8" />
         </motion.button>
       )}
+
       <BottomNav />
     </Screen>
   );
