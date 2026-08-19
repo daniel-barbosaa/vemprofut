@@ -52,6 +52,30 @@ export function CreatePelada() {
                 </p>
               )}
             </div>
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5">
+              <div className="mb-3 flex items-center justify-between">
+                <label className="text-sm font-medium text-zinc-300">
+                  Jogadores por time
+                </label>
+
+                <span className="text-2xl font-bold text-emerald-400">
+                  {watch("playersPerTeam")} jogadores
+                </span>
+              </div>
+
+              <input
+                type="range"
+                min="4"
+                max="7"
+                {...register("playersPerTeam", { valueAsNumber: true })}
+                className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-zinc-800 accent-emerald-500"
+              />
+
+              <div className="mt-2 flex justify-between text-xs text-zinc-600">
+                <span>4 jogadores</span>
+                <span>7 jogadores</span>
+              </div>
+            </div>
 
             <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5">
               <div className="mb-3 flex items-center justify-between">

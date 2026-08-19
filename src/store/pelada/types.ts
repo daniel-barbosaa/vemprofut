@@ -77,6 +77,7 @@ export interface Pelada {
   maxConsecutiveWins: number;
   overtimeEnabled: boolean;
   overtimeDuration: number;
+  playersPerTeam: number;
   createdAt: number;
   players: Player[];
   sessionPlayers: Player[];
@@ -84,12 +85,13 @@ export interface Pelada {
   queue: Team[];
   currentMatch?: Match;
   goalkeeper?: Player;
-  recentSubstitutions?: Substitution[]; // Substituições recentes para mostrar feedback visual
+  recentSubstitutions?: Substitution[];
   sessionStarted?: boolean;
 }
 
 export type CreatePeladaDTO = {
   name: string;
+  playersPerTeam: number;
   matchDuration: number;
   goalLimit: number;
   maxConsecutiveWins: number;

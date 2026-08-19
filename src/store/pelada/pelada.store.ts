@@ -114,6 +114,7 @@ export const usePeladaStore = create<Store>()(
         maxConsecutiveWins,
         overtimeEnabled,
         overtimeDuration,
+        playersPerTeam,
       }: CreatePeladaDTO) => {
         const newPelada: Pelada = {
           id: uuid(),
@@ -123,6 +124,7 @@ export const usePeladaStore = create<Store>()(
           maxConsecutiveWins,
           overtimeEnabled,
           overtimeDuration,
+          playersPerTeam,
           createdAt: Date.now(),
           players: [],
           sessionPlayers: [],
@@ -165,12 +167,11 @@ export const usePeladaStore = create<Store>()(
 
         if (!pelada) return;
 
-        // embaralhar jogadores
         const shuffled = [...pelada.players].sort(() => Math.random() - 0.5);
 
         const teams: Team[] = [];
 
-        const playersPerTeam = 5;
+        const playersPerTeam = pelada.playersPerTeam;
         const totalTeams = Math.ceil(shuffled.length / playersPerTeam);
 
         for (let i = 0; i < totalTeams; i++) {
