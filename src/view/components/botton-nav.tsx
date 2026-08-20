@@ -16,7 +16,6 @@ import {
   MessagesSquare,
   MoreHorizontal,
   Trophy,
-  TvMinimalPlay,
   Users,
 } from "lucide-react";
 import { useState } from "react";
@@ -72,9 +71,9 @@ export function BottomNav() {
 
   const navItems = [
     {
-      icon: TvMinimalPlay,
-      label: "Partida",
-      path: "/match",
+      icon: Users,
+      label: "Times",
+      path: "/teams",
     },
     {
       icon: ListChevronsUpDown,

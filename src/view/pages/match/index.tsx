@@ -1,6 +1,5 @@
 import { Screen } from "@/view/components/screen";
 import { ControlButtons } from "./control-buttons";
-import { EmptyMatchState } from "./empty-match-state";
 import { QueuePreview } from "./queue-preview";
 import { Score } from "./score";
 import { TeamReturnedNotice } from "./team-returned-notice";
@@ -24,9 +23,8 @@ export function Match() {
   } = useMatch();
 
   if (!pelada || !match) {
-    return <EmptyMatchState />;
+    return null;
   }
-
   return (
     <Screen>
       <TeamReturnedNotice match={match} />
