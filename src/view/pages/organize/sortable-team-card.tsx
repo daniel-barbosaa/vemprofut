@@ -1,3 +1,4 @@
+import { cn } from "@/app/utils/class-name-merger";
 import type { Team } from "@/store/pelada/types";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -8,6 +9,7 @@ interface SortableTeamCardProps {
   position: number;
   highlight?: boolean;
   blockedFromMatch?: boolean;
+  playerPerTeam: number;
 }
 
 export function SortableTeamCard({
@@ -15,6 +17,7 @@ export function SortableTeamCard({
   position,
   highlight,
   blockedFromMatch,
+  playerPerTeam,
 }: SortableTeamCardProps) {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({
@@ -32,13 +35,14 @@ export function SortableTeamCard({
       style={style}
       {...attributes}
       {...listeners}
-      className={`touch-none rounded-2xl border p-4 transition-all ${
+      className={cn(
+        "touch-none rounded-2xl border p-4 transition-all",
         blockedFromMatch
           ? "border-amber-700/40 bg-amber-950/20"
           : highlight
             ? "border-emerald-700/40 bg-emerald-950/20"
-            : "border-zinc-800 bg-zinc-900"
-      }`}
+            : "border-zinc-800 bg-zinc-900",
+      )}
     >
       <div className="flex items-center justify-between">
         <div>
@@ -48,10 +52,10 @@ export function SortableTeamCard({
           </div>
 
           <div className="mt-1 text-sm text-zinc-500">
-            {team.players.length} jogadores
+            {team.players.map((player) => player.name).join(", ")}
           </div>
 
-          {team.players.length < 5 && (
+          {team.players.length < playerPerTeam && (
             <div className="mt-2 text-xs font-medium text-amber-400">
               Time incompleto
             </div>

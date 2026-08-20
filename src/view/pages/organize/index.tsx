@@ -43,6 +43,7 @@ export function OrganizeNextMatch() {
     teams,
     handleStartNextMatch,
     canStartMatch,
+    playerPerTeam,
   } = useOrganize();
 
   const { collapsed } = useCollapsedHeader();
@@ -50,7 +51,7 @@ export function OrganizeNextMatch() {
     <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
       <>
         <TopBar
-          title=" Organizar Próxima Rodada"
+          title="Organizar Próxima Rodada"
           collapsed={collapsed}
           showMenu
         />
@@ -128,6 +129,7 @@ export function OrganizeNextMatch() {
                   position={index + 1}
                   highlight={index < 2}
                   blockedFromMatch={Boolean(team.isResting)}
+                  playerPerTeam={playerPerTeam ?? 0}
                 />
               ))}
             </div>

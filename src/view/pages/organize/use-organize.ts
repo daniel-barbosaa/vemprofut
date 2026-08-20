@@ -175,6 +175,7 @@ export function useOrganize() {
   const navigate = useNavigate();
 
   const { pelada, startNextMatch, startMatch } = usePeladaStore();
+  const playerPerTeam = pelada?.playersPerTeam;
 
   const lastMatch = pelada?.currentMatch ?? pelada?.matches.at(-1);
 
@@ -245,5 +246,6 @@ export function useOrganize() {
     lastMatch,
     teams,
     canStartMatch,
+    playerPerTeam,
   };
 }
