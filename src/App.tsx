@@ -1,6 +1,6 @@
 import { Theme } from "@radix-ui/themes";
+import * as Sentry from "@sentry/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ErrorBoundary } from "react-error-boundary";
 import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "./app/contexts/auth-context";
 import { Router } from "./router";
@@ -18,7 +18,7 @@ const queryClient = new QueryClient({
 export default function App() {
   return (
     <>
-      <ErrorBoundary fallback={<ErrorScreen />}>
+      <Sentry.ErrorBoundary fallback={<ErrorScreen />}>
         <QueryClientProvider client={queryClient}>
           <Theme>
             <AuthProvider>
@@ -27,7 +27,7 @@ export default function App() {
             </AuthProvider>
           </Theme>
         </QueryClientProvider>
-      </ErrorBoundary>
+      </Sentry.ErrorBoundary>
     </>
   );
 }

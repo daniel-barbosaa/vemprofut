@@ -1,3 +1,4 @@
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
@@ -29,7 +30,14 @@ export default defineConfig({
       },
     }),
     tailwindcss(),
+    sentryVitePlugin({
+      org: "myprojects-ih",
+      project: "vemprofut",
+    }),
   ],
+  build: {
+    sourcemap: true,
+  },
   server: {
     port: 3000,
     host: true,

@@ -16,7 +16,7 @@ export function QueuePreview({ match, pelada }: QueuePreviewProps) {
       <div className="space-y-3">
         <div className="rounded-lg border border-emerald-700/30 bg-emerald-900/20 p-3">
           <div className="mb-2 text-xs font-semibold text-emerald-400 uppercase">
-            ⚽ Em Jogo
+            Em Jogo
           </div>
           <div className="flex items-center justify-between">
             <span className="font-bold text-white">{match.teamA.name}</span>
@@ -30,7 +30,7 @@ export function QueuePreview({ match, pelada }: QueuePreviewProps) {
           return restingTeam ? (
             <div className="rounded-lg border-2 border-amber-600/50 bg-amber-900/30 p-3">
               <div className="mb-1 flex items-center gap-1 text-xs font-semibold text-amber-400 uppercase">
-                👑 Fila de Descanso
+                Fila de Descanso
               </div>
               <div className="mb-2 text-lg font-bold text-white">
                 {restingTeam.name}
@@ -64,7 +64,7 @@ export function QueuePreview({ match, pelada }: QueuePreviewProps) {
             return (
               <div className="rounded-lg border border-zinc-700/50 bg-zinc-900/50 p-3">
                 <div className="mb-1 text-xs font-semibold text-zinc-500 uppercase">
-                  ⚽ Próxima Partida
+                  Próxima Partida
                 </div>
                 <div className="text-xs text-zinc-400">
                   Definida após o término desta partida
@@ -82,7 +82,7 @@ export function QueuePreview({ match, pelada }: QueuePreviewProps) {
           return (
             <div className="rounded-lg border border-blue-700/30 bg-blue-900/20 p-3">
               <div className="mb-2 flex items-center gap-1 text-xs font-semibold text-blue-400 uppercase">
-                ⚽ Próxima Partida
+                Próxima Partida
               </div>
               <div className="text-sm text-white">
                 Vencedor desta partida{" "}
@@ -108,7 +108,7 @@ export function QueuePreview({ match, pelada }: QueuePreviewProps) {
           return (
             <div className="space-y-2">
               <div className="text-xs font-semibold text-zinc-500 uppercase">
-                ⏳ Fila de Espera
+                Fila de Espera
               </div>
               {waitingTeams.map((team, idx) => (
                 <div
