@@ -24,26 +24,19 @@ export function useMatchResult() {
         : match.teamA
       : null;
 
-  // CÁLCULO DETERMINÍSTICO DO PRÓXIMO CONFRONTO
-  // Calcula o próximo confronto usando a MESMA lógica do startNextMatch
-  // para garantir que a tela mostre exatamente o que vai acontecer
   const calculateNextMatch = (): { team1: Team | null; team2: Team | null } => {
     if (!pelada || !match) return { team1: null, team2: null };
 
-    // Simula a lógica do startNextMatch sem modificar o estado
     const simulatedQueue = [...pelada.queue];
 
     if (isDraw) {
-      // EMPATE - remove ambos os times
       simulatedQueue.splice(0, 2);
 
-      // Verifica time descansando
       const restingTeamIndex = simulatedQueue.findIndex(
         (t) => t.isResting && t.matchesToRest === 1,
       );
 
       if (restingTeamIndex !== -1) {
-        // Time descansando retorna
         const restingTeam = simulatedQueue[restingTeamIndex];
         simulatedQueue.splice(restingTeamIndex, 1);
         return {
@@ -52,7 +45,6 @@ export function useMatchResult() {
         };
       }
 
-      // Próximos dois da fila
       return {
         team1: simulatedQueue[0] || null,
         team2: simulatedQueue[1] || null,
@@ -64,19 +56,14 @@ export function useMatchResult() {
       const consecutiveWins = (winnerInQueue?.consecutiveWins || 0) + 1;
 
       if (consecutiveWins >= pelada.maxConsecutiveWins) {
-        // VENCEDOR VAI DESCANSAR
-        // Remove ambos os times (posições 0 e 1)
         simulatedQueue.splice(0, 2);
 
-        // Próximo confronto: dois primeiros da fila (SEM o vencedor)
         return {
           team1: simulatedQueue[0] || null,
           team2: simulatedQueue[1] || null,
         };
       }
 
-      // VENCEDOR CONTINUA
-      // Verifica se há time descansando pronto para retornar
       const restingTeamIndex = simulatedQueue.findIndex(
         (t) => t.isResting && t.matchesToRest === 1,
       );

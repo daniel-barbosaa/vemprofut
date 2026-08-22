@@ -1,9 +1,10 @@
+import { QUERY_CACHE_KEYS } from "@/app/constant/query-cache-keys";
 import { useAuth } from "@/app/hooks/use-auth";
 import { peladaServices } from "@/app/services/pelada";
 import { usePeladaStore } from "@/store/pelada/pelada.store";
 import type { Pelada } from "@/store/pelada/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import {
@@ -16,6 +17,7 @@ export function useCreatePeladaController() {
   const { createPelada } = usePeladaStore();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const {
     handleSubmit: hookFormSubmit,
     register,
@@ -41,6 +43,10 @@ export function useCreatePeladaController() {
     const pelada = createPelada(data);
 
     await savePelada(pelada);
+
+    await queryClient.invalidateQueries({
+      queryKey: [QUERY_CACHE_KEYS.pelada, user?.id],
+    });
 
     navigate("/players");
   });

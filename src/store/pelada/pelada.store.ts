@@ -24,6 +24,7 @@ type Store = {
   removeGoal(teamId: string): void;
   endMatch(): void;
   startNextMatch(queueOverride?: Team[]): void;
+  setQueue(queue: Team[]): void;
   manualSubstitution(
     targetTeamId: string,
     sourceTeamId: string,
@@ -32,6 +33,7 @@ type Store = {
   pauseMatch(): void;
   resumeMatch(): void;
   startOvertime: () => void;
+  clearPelada(): void;
 };
 
 export const usePeladaStore = create<Store>()(
@@ -67,6 +69,7 @@ export const usePeladaStore = create<Store>()(
             ...pelada,
             currentMatch: match,
             sessionStarted: true,
+            queueManuallyOrganized: false,
           },
         });
       },
@@ -610,6 +613,37 @@ export const usePeladaStore = create<Store>()(
               queue: finalQueue,
               currentMatch: undefined,
               matches: updatedMatches,
+              queueManuallyOrganized: false,
+            },
+          };
+        });
+      },
+      setQueue: (queue) => {
+        set((state) => {
+          const pelada = state.pelada;
+
+          if (!pelada) return state;
+
+          return {
+            pelada: {
+              ...pelada,
+              queue: queue.map((team, index) => {
+                const status: PlayerStatus =
+                  index < 2
+                    ? "playing"
+                    : team.isResting
+                      ? "resting"
+                      : "waiting";
+
+                return {
+                  ...team,
+                  players: team.players.map((player) => ({
+                    ...player,
+                    status,
+                  })),
+                };
+              }),
+              queueManuallyOrganized: true,
             },
           };
         });
@@ -723,6 +757,9 @@ export const usePeladaStore = create<Store>()(
       },
       setPelada: (pelada) => {
         set({ pelada });
+      },
+      clearPelada: () => {
+        set({ pelada: null });
       },
     }),
     { name: "pelada-storage" },

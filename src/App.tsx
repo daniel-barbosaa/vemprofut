@@ -23,7 +23,13 @@ export default function App() {
           <Theme>
             <AuthProvider>
               <Router />
-              <Toaster position="top-center" reverseOrder={false} />
+              <Toaster
+                position="top-center"
+                reverseOrder={false}
+                containerStyle={{
+                  top: "calc(env(safe-area-inset-top) + 0.5rem)",
+                }}
+              />
             </AuthProvider>
           </Theme>
         </QueryClientProvider>

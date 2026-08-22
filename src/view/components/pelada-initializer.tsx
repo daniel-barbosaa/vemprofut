@@ -4,13 +4,19 @@ import { useEffect } from "react";
 
 export function PeladaInitializer() {
   const { data: peladaFromServer } = useActivePelada();
-  const { pelada, setPelada } = usePeladaStore();
+
+  const { pelada, setPelada, clearPelada } = usePeladaStore();
 
   useEffect(() => {
+    if (peladaFromServer === null) {
+      clearPelada();
+      return;
+    }
+
     if (!pelada && peladaFromServer) {
       setPelada(peladaFromServer);
     }
-  }, [pelada, peladaFromServer, setPelada]);
+  }, [pelada, peladaFromServer, setPelada, clearPelada]);
 
   return null;
 }

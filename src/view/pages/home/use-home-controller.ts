@@ -1,3 +1,4 @@
+import { QUERY_CACHE_KEYS } from "@/app/constant/query-cache-keys";
 import { useAuth } from "@/app/hooks/use-auth";
 import { useUpdatePelada } from "@/app/hooks/use-update-pelada";
 import { create } from "@/app/services/summaries/create";
@@ -29,7 +30,7 @@ export function useHomeController() {
         options: { status: "finished" },
       });
 
-      queryClient.setQueryData(["pelada", user.id], null);
+      queryClient.setQueryData([QUERY_CACHE_KEYS.pelada, user?.id], null);
 
       resetPelada();
 

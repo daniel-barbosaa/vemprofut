@@ -23,7 +23,6 @@ export function Players() {
   const sessionStarted = Boolean(pelada?.sessionStarted);
 
   const canEditPlayers = !sessionStarted;
-
   const handleAddPlayer = () => {
     const name = newPlayerName.trim();
 
@@ -43,10 +42,6 @@ export function Players() {
 
     navigate("/draw");
   };
-
-  if (!pelada) {
-    return null;
-  }
 
   return (
     <Screen>
@@ -95,7 +90,7 @@ export function Players() {
       <div className="pb-30">
         {totalPlayers > 0 && (
           <div className="space-y-2">
-            {pelada.players.map((player, index) => (
+            {pelada?.players.map((player, index) => (
               <motion.div
                 key={player.id}
                 initial={{ opacity: 0, x: -15 }}

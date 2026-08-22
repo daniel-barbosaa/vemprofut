@@ -4,6 +4,7 @@ import { Screen } from "@/view/components/screen";
 import { Spinner } from "@/view/components/ui/spinner";
 import { Clock, History, Play, Plus, Trophy } from "lucide-react";
 import { motion } from "motion/react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useHomeController } from "./use-home-controller";
 
@@ -12,10 +13,9 @@ export function Home() {
   const { pelada, startMatch, startNextMatch } = usePeladaStore();
   const { finishPelada } = useHomeController();
   const isMatchActive = pelada?.currentMatch?.isActive ?? false;
-  const hasFinishedMatchPendingQueueUpdate = Boolean(
-    pelada?.currentMatch && !pelada.currentMatch.isActive,
-  );
   const { isLoading } = useActivePelada();
+  const nextTeams = pelada?.queue.slice(0, 2);
+  const hasNextMatch = nextTeams?.length === 2;
 
   const handleStartMatch = () => {
     if (pelada && pelada.queue.length >= 2) {
@@ -24,9 +24,15 @@ export function Home() {
     }
   };
 
-  const handlePrepareNextMatch = () => {
-    startNextMatch();
-  };
+  useEffect(() => {
+    if (
+      pelada?.currentMatch &&
+      !pelada.currentMatch.isActive &&
+      !pelada.queueManuallyOrganized
+    ) {
+      startNextMatch();
+    }
+  }, [pelada?.currentMatch, pelada?.queueManuallyOrganized, startNextMatch]);
 
   return (
     <Screen>
@@ -92,6 +98,29 @@ export function Home() {
               </div>
             </div>
 
+            {hasNextMatch && !isMatchActive && (
+              <div className="mb-6 rounded-2xl border border-emerald-700/30 bg-linear-to-br from-emerald-900/20 to-zinc-900 p-5">
+                <div className="mb-4 flex items-center gap-2">
+                  <span className="size-2 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(74,222,128,0.8)]" />
+                  <span className="text-xs font-semibold tracking-wide text-emerald-400 uppercase">
+                    Próxima partida
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
+                  <p className="truncate text-right font-semibold text-white">
+                    {nextTeams[0].name}
+                  </p>
+                  <span className="rounded-full border border-zinc-700 bg-zinc-950 px-2.5 py-1 text-xs font-bold text-zinc-400">
+                    VS
+                  </span>
+                  <p className="truncate font-semibold text-white">
+                    {nextTeams[1].name}
+                  </p>
+                </div>
+              </div>
+            )}
+
             <div className="space-y-3">
               {isMatchActive ? (
                 <button
@@ -100,14 +129,6 @@ export function Home() {
                 >
                   <Play className="size-5" />
                   Continuar Partida
-                </button>
-              ) : hasFinishedMatchPendingQueueUpdate ? (
-                <button
-                  onClick={handlePrepareNextMatch}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 py-4 font-semibold text-white transition-all hover:bg-emerald-600 active:scale-95"
-                >
-                  <Play className="size-5" />
-                  Organizar Próxima Partida
                 </button>
               ) : pelada.queue.length >= 2 ? (
                 <button

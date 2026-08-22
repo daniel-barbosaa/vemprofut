@@ -87,6 +87,7 @@ export interface Pelada {
   goalkeeper?: Player;
   recentSubstitutions?: Substitution[];
   sessionStarted?: boolean;
+  queueManuallyOrganized?: boolean;
 }
 
 export type CreatePeladaDTO = {

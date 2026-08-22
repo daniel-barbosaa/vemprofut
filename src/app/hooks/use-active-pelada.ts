@@ -8,6 +8,7 @@ export function useActivePelada() {
   const { data, isFetching } = useQuery({
     queryKey: [QUERY_CACHE_KEYS.pelada, user?.id],
     queryFn: () => peladaServices.findActiveByOwnerId(user!.id),
+    refetchOnWindowFocus: true,
     enabled: !!user,
     staleTime: Infinity,
   });

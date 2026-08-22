@@ -13,6 +13,10 @@ function buildDefaultNextQueue(
     return [];
   }
 
+  if (pelada.queueManuallyOrganized) {
+    return pelada.queue;
+  }
+
   if (!lastMatch || !pelada.currentMatch) {
     return pelada.queue;
   }
@@ -174,7 +178,7 @@ function buildDefaultNextQueue(
 export function useOrganize() {
   const navigate = useNavigate();
 
-  const { pelada, startNextMatch, startMatch } = usePeladaStore();
+  const { pelada, setQueue, startNextMatch, startMatch } = usePeladaStore();
   const playerPerTeam = pelada?.playersPerTeam;
 
   const lastMatch = pelada?.currentMatch ?? pelada?.matches.at(-1);
@@ -222,18 +226,21 @@ export function useOrganize() {
       return;
     }
 
-    setTeams((current) => {
-      const nextTeams = arrayMove(current, oldIndex, newIndex);
-      const restingTeamInNextMatch = nextTeams
-        .slice(0, 2)
-        .some((team) => team.isResting);
+    const nextTeams = arrayMove(teams, oldIndex, newIndex);
+    const restingTeamInNextMatch = nextTeams
+      .slice(0, 2)
+      .some((team) => team.isResting);
 
-      return restingTeamInNextMatch ? current : nextTeams;
-    });
+    if (restingTeamInNextMatch) {
+      return;
+    }
+
+    setTeams(nextTeams);
+    setQueue(nextTeams);
   }
 
   const handleStartNextMatch = () => {
-    startNextMatch();
+    startNextMatch(teams);
     startMatch();
     navigate("/match");
   };
