@@ -1,4 +1,5 @@
 import { MatchInProgressGuard } from "@/router/match-in-progress-guard";
+import { NotFound } from "@/view/components/not-found";
 import { AppLayout } from "@/view/layout/app-layout";
 import { CreatePelada } from "@/view/pages/create-pelada";
 import { Feedbacks } from "@/view/pages/feedbacks";
@@ -63,6 +64,8 @@ export function Router() {
           <Route element={<SignIn />} path={paths.signIn} />
           <Route element={<LandingPage />} path={paths.landingPage} />
         </Route>
+
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );

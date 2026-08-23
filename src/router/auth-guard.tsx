@@ -2,6 +2,7 @@ import { useAuth } from "@/app/hooks/use-auth";
 import { PeladaInitializer } from "@/view/components/pelada-initializer";
 import { motion } from "motion/react";
 import { Navigate, Outlet } from "react-router-dom";
+import { paths } from "./paths";
 
 interface AuthGuardProps {
   isPrivate: boolean;
@@ -48,7 +49,7 @@ export function AuthGuard({ isPrivate }: AuthGuardProps) {
   }
 
   if (user && !isPrivate) {
-    return <Navigate to="/" replace />;
+    return <Navigate to={paths.home} replace />;
   }
 
   return (

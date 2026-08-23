@@ -3,6 +3,7 @@ import { useFeedback } from "@/app/hooks/use-feedback";
 import { supabase } from "@/app/lib/supabase";
 import { cn } from "@/app/utils/class-name-merger";
 import { ADMIN_EMAIL } from "@/router/admin-guard";
+import { paths } from "@/router/paths";
 import { usePeladaStore } from "@/store/pelada/pelada.store";
 import {
   ClipboardList,
@@ -83,7 +84,7 @@ export function BottomNav() {
     {
       icon: House,
       label: "Início",
-      path: "/",
+      path: `${paths.home}`,
     },
     {
       icon: ListOrdered,

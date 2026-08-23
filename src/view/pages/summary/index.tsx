@@ -1,5 +1,6 @@
 import { useCollapsedHeader } from "@/app/hooks/use-collapsed-header";
 import { cn } from "@/app/utils/class-name-merger";
+import { paths } from "@/router/paths";
 import { TopBar } from "@/view/components/top-bar";
 import { Spinner } from "@/view/components/ui/spinner";
 import { Calendar, FileText, Target, Trophy } from "lucide-react";
@@ -33,7 +34,11 @@ export function Summaries() {
 
   return (
     <>
-      <TopBar collapsed={collapsed} title="Sessões anteriores" backTo="/" />
+      <TopBar
+        collapsed={collapsed}
+        title="Sessões anteriores"
+        backTo={paths.home}
+      />
 
       <div className="px-6">
         <div className="mb-6">

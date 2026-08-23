@@ -1,6 +1,6 @@
 export const paths = {
   signIn: "/login",
-  home: "/",
+  home: "/home",
   teams: "/teams",
   create: "/create",
   players: "/players",
@@ -13,5 +13,5 @@ export const paths = {
   installApp: "/install",
   suggestions: "/suggestions",
   feedbacks: "/feedbacks",
-  landingPage: "/landing-page",
+  landingPage: "/",
 } as const;
