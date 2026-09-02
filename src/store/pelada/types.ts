@@ -15,6 +15,7 @@ export interface Player {
   originalTeamId?: string; // Time original do jogador (quando afastado)
   removedAt?: number; // Timestamp de quando foi removido
   removalReason?: "injury" | "substitution" | "manual" | "other"; // Motivo da remoção
+  goals: number;
 }
 
 export interface Team {
@@ -40,6 +41,11 @@ export interface Substitution {
   timestamp: number;
   reason?: "injury" | "absence" | "other";
 }
+
+export type LastGoal = {
+  teamId: string;
+  playerId: string | null;
+};
 
 export interface Match {
   id: string;
@@ -67,6 +73,8 @@ export interface Match {
   teamBConsecutiveWins?: number; // Sequência de vitórias do time B no momento
   autoRested?: boolean; // Se algum time foi automaticamente para descanso após essa partida
   restingTeamId?: string; // ID do time que foi para descanso após essa partida
+
+  lastGoal: LastGoal | null;
 }
 
 export interface Pelada {

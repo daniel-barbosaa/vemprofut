@@ -1,4 +1,5 @@
 import { v4 as uuid } from "uuid";
+
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type {
@@ -20,8 +21,8 @@ type Store = {
   addPlayer(name: string): void;
   removePlayer(playerId: string): void;
   drawTeams(): void;
-  addGoal(teamId: string): void;
-  removeGoal(teamId: string): void;
+  addGoal(teamId: string, playerId?: string): void;
+  removeGoal(teamId: string, playerId?: string): void;
   endMatch(): void;
   startNextMatch(queueOverride?: Team[]): void;
   setQueue(queue: Team[]): void;
@@ -62,6 +63,7 @@ export const usePeladaStore = create<Store>()(
           isPaused: false,
           pausedAt: undefined,
           totalPausedTime: 0,
+          lastGoal: null,
         };
 
         set({
@@ -149,6 +151,7 @@ export const usePeladaStore = create<Store>()(
           id: uuid(),
           name,
           status: pelada.sessionStarted ? "pending" : "available",
+          goals: 0,
         };
 
         set({
@@ -228,7 +231,7 @@ export const usePeladaStore = create<Store>()(
           },
         });
       },
-      addGoal: (teamId: string) => {
+      addGoal: (teamId: string, playerId?: string) => {
         set((state) => {
           const pelada = state.pelada;
 
@@ -238,7 +241,13 @@ export const usePeladaStore = create<Store>()(
 
           const match = pelada.currentMatch;
 
-          const updatedMatch = { ...match };
+          const updatedMatch = {
+            ...match,
+            lastGoal: {
+              teamId,
+              playerId: playerId ?? null,
+            },
+          };
 
           if (match.teamA.id === teamId) {
             updatedMatch.teamA = {
@@ -252,15 +261,24 @@ export const usePeladaStore = create<Store>()(
             };
           }
 
+          const updatedPlayers = playerId
+            ? pelada.players.map((player) =>
+                player.id === playerId
+                  ? { ...player, goals: player.goals + 1 }
+                  : player,
+              )
+            : pelada.players;
+
           return {
             pelada: {
               ...pelada,
               currentMatch: updatedMatch,
+              players: updatedPlayers,
             },
           };
         });
       },
-      removeGoal: (teamId: string) => {
+      removeGoal: (teamId: string, playerId?: string) => {
         set((state) => {
           const pelada = state.pelada;
 
@@ -270,7 +288,10 @@ export const usePeladaStore = create<Store>()(
 
           const match = pelada.currentMatch;
 
-          const updatedMatch = { ...match };
+          const updatedMatch = {
+            ...match,
+            lastGoal: null,
+          };
 
           if (match.teamA.id === teamId && match.teamA.score > 0) {
             updatedMatch.teamA = {
@@ -284,10 +305,22 @@ export const usePeladaStore = create<Store>()(
             };
           }
 
+          const updatedPlayers = playerId
+            ? pelada.players.map((player) =>
+                player.id === playerId
+                  ? {
+                      ...player,
+                      goals: Math.max(0, player.goals - 1),
+                    }
+                  : player,
+              )
+            : pelada.players;
+
           return {
             pelada: {
               ...pelada,
               currentMatch: updatedMatch,
+              players: updatedPlayers,
             },
           };
         });
