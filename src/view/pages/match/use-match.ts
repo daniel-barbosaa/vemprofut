@@ -18,7 +18,9 @@ export function useMatch() {
   const match = pelada?.currentMatch;
   const isPaused = match?.isPaused ?? false;
   const isOvertime = match?.isOvertime ?? false;
+
   const whistle = new Audio("/sounds/whistle-sound-effect.mp3");
+
   const { persistPelada } = usePersistPelada();
 
   const currentDuration = useMemo(() => {
@@ -31,7 +33,6 @@ export function useMatch() {
     if (!match) return 0;
 
     const now = Date.now();
-
     const totalPausedTime = match.totalPausedTime ?? 0;
 
     const startTime = isOvertime
@@ -46,6 +47,10 @@ export function useMatch() {
   const [timeRemaining, setTimeRemaining] = useState(getRemainingTime());
 
   const hasFinishedMatchRef = useRef(false);
+
+  const hasReachedGoalLimitRef = useRef(false);
+
+  const hasReachedTimeLimitRef = useRef(false);
 
   const finishMatch = useCallback(
     async (message: string, icon: string) => {
@@ -78,6 +83,8 @@ export function useMatch() {
     setTimeRemaining(getRemainingTime());
 
     hasFinishedMatchRef.current = false;
+    hasReachedGoalLimitRef.current = false;
+    hasReachedTimeLimitRef.current = false;
   }, [match?.id, match?.isOvertime]);
 
   useEffect(() => {
@@ -87,9 +94,14 @@ export function useMatch() {
       match.teamA.score >= match.goalLimit ||
       match.teamB.score >= match.goalLimit;
 
-    if (reachedGoalLimit) {
+    if (reachedGoalLimit && !hasReachedGoalLimitRef.current) {
+      hasReachedGoalLimitRef.current = true;
+
       whistle.play();
-      finishMatch("Limite de gols atingido!", "⚽");
+
+      toast("Limite de gols atingido! Encerre a partida.", {
+        icon: "⚽",
+      });
     }
   }, [
     match?.isActive,
@@ -97,7 +109,6 @@ export function useMatch() {
     match?.teamB.score,
     match?.goalLimit,
     pelada,
-    finishMatch,
   ]);
 
   useEffect(() => {
@@ -110,7 +121,7 @@ export function useMatch() {
 
       setTimeRemaining(remaining);
 
-      if (remaining === 0) {
+      if (remaining <= 0) {
         clearInterval(interval);
 
         const shouldStartOvertime =
@@ -118,26 +129,26 @@ export function useMatch() {
 
         if (shouldStartOvertime) {
           startOvertime();
+
           toast("Empate! Acréscimo iniciado.");
 
           return;
         }
 
-        whistle.play();
-        finishMatch("Tempo encerrado!", "⏱️");
+        if (!hasReachedTimeLimitRef.current) {
+          hasReachedTimeLimitRef.current = true;
+
+          whistle.play();
+
+          toast("Tempo encerrado! Encerre a partida.", {
+            icon: "⏱️",
+          });
+        }
       }
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [
-    match?.isActive,
-    isPaused,
-    pelada,
-    isOvertime,
-    isDraw,
-    startOvertime,
-    finishMatch,
-  ]);
+  }, [match?.isActive, isPaused, pelada, isOvertime, isDraw, startOvertime]);
 
   const minutesRemaining = Math.floor(timeRemaining / 60);
 
@@ -164,18 +175,14 @@ export function useMatch() {
     removeGoal,
     pelada,
     match,
-
     isPaused,
     isOvertime,
-
     togglePause,
-
+    finishMatch,
     endMatch,
-
     timeRemaining,
     minutesRemaining,
     secondsRemaining,
-
     matchDurationInMinutes,
     timeProgress,
   };

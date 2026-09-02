@@ -29,6 +29,15 @@ export default function App() {
                 containerStyle={{
                   top: "calc(env(safe-area-inset-top) + 0.5rem)",
                 }}
+                toastOptions={{
+                  style: {
+                    background: "#18181b",
+                    color: "#fff",
+                    border: "1px solid #27272a",
+                    borderRadius: "12px",
+                    padding: "12px 16px",
+                  },
+                }}
               />
             </AuthProvider>
           </Theme>
