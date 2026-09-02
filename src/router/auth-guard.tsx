@@ -45,7 +45,7 @@ export function AuthGuard({ isPrivate }: AuthGuardProps) {
   }
 
   if (!user && isPrivate) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/" />;
   }
 
   if (user && !isPrivate) {

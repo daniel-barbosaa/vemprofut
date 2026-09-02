@@ -14,6 +14,7 @@ export async function getAll(): Promise<SummaryResponse> {
   const { data, error } = await supabase
     .from("summaries")
     .select("*")
+    .order("created_at", { ascending: false })
     .overrideTypes<SummaryResponse>();
 
   if (error) {
