@@ -5,9 +5,10 @@ import { createPortal } from "react-dom";
 
 interface BottomSheetProps {
   open: boolean;
-  title: string;
+  title?: string;
   children: ReactNode;
   onClose: () => void;
+  showHeader?: boolean;
 }
 
 export function BottomSheet({
@@ -15,6 +16,7 @@ export function BottomSheet({
   title,
   children,
   onClose,
+  showHeader = true,
 }: BottomSheetProps) {
   return createPortal(
     <AnimatePresence>
@@ -25,7 +27,7 @@ export function BottomSheet({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 z-40 bg-black/60"
+            className="fixed inset-0 z-40 bg-black/70 backdrop-blur-[2px]"
           />
 
           <motion.div
@@ -33,22 +35,31 @@ export function BottomSheet({
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{
-              duration: 0.25,
-              ease: [0.25, 0.8, 0.25, 1],
+              type: "spring",
+              damping: 28,
+              stiffness: 300,
             }}
-            className="fixed right-0 bottom-0 left-0 z-50 rounded-t-3xl border-t border-zinc-800 bg-zinc-900"
+            className="fixed inset-x-0 bottom-0 z-50 max-h-[95vh] overflow-y-auto rounded-t-[28px] border-t border-white/10 bg-zinc-950 px-4 pt-3 pb-6"
           >
-            <div className="mx-auto max-w-2xl p-6">
-              <div className="mb-5 flex items-center justify-between">
-                <h3 className="text-xl font-semibold text-white">{title}</h3>
+            <div className="mx-auto w-full max-w-xl">
+              {showHeader && (
+                <div className="mb-5 flex items-center justify-between">
+                  {title && (
+                    <h3 className="text-xl font-semibold text-white">
+                      {title}
+                    </h3>
+                  )}
 
-                <button
-                  onClick={onClose}
-                  className="rounded-full p-2 text-zinc-400 hover:bg-zinc-800"
-                >
-                  <X className="size-5" />
-                </button>
-              </div>
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    aria-label="Fechar"
+                    className="rounded-full p-2 text-zinc-400 hover:bg-zinc-800"
+                  >
+                    <X className="size-5" />
+                  </button>
+                </div>
+              )}
 
               {children}
             </div>

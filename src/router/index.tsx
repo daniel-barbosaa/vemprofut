@@ -14,7 +14,6 @@ import { Players } from "@/view/pages/players";
 import { SignIn } from "@/view/pages/sign-in";
 import { Suggestions } from "@/view/pages/sugestions";
 import { Summaries } from "@/view/pages/summary";
-import { SessionSummary } from "@/view/pages/summary/session";
 import { TeamDraw } from "@/view/pages/team-draw";
 import { Teams } from "@/view/pages/teams";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -48,7 +47,6 @@ export function Router() {
             <Route element={<MatchResult />} path={paths.matchResult} />
 
             <Route element={<Summaries />} path={paths.summary} />
-            <Route element={<SessionSummary />} path={`${paths.summary}/:id`} />
 
             <Route element={<OrganizeNextMatch />} path={paths.organize} />
           </Route>

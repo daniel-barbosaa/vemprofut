@@ -133,6 +133,10 @@ export function buildSummary(pelada: Pelada): SummaryItem | null {
       return diffA - diffB;
     })[0];
 
+  const topScorer = [...pelada.players]
+    .filter((player) => player.goals > 0)
+    .sort((a, b) => b.goals - a.goals)[0];
+
   return {
     createdAt: pelada.createdAt.toString(),
     matchesCount: pelada.matches.length,
@@ -144,5 +148,6 @@ export function buildSummary(pelada: Pelada): SummaryItem | null {
     bestStreak,
     worstTeam,
     balancedMatch,
+    topScorer,
   };
 }

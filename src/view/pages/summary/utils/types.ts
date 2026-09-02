@@ -30,4 +30,5 @@ export interface SummaryItem {
   goals: number;
   balancedMatch?: Match;
   createdAt: string;
+  topScorer: Player;
 }

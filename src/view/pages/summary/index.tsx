@@ -5,16 +5,22 @@ import { TopBar } from "@/view/components/top-bar";
 import { Spinner } from "@/view/components/ui/spinner";
 import { Calendar, FileText, Target, Trophy } from "lucide-react";
 import { motion } from "motion/react";
-import { useNavigate } from "react-router";
+import { useState } from "react";
+
+import { SummaryBottomSheet } from "./summary-bottom-sheet";
+import type { SummaryCardData } from "./summary-card";
 import { useSummaryController } from "./use-summary-controller";
 
 export function Summaries() {
-  const navigate = useNavigate();
   const { summariesBuilt, isLoading } = useSummaryController();
   const { collapsed } = useCollapsedHeader();
 
+  const [selectedSummary, setSelectedSummary] =
+    useState<SummaryCardData | null>(null);
+
   const formatDate = (dateString: number) => {
     const date = new Date(dateString);
+
     return date.toLocaleDateString("pt-BR", {
       day: "2-digit",
       month: "2-digit",
@@ -65,9 +71,11 @@ export function Summaries() {
             <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full border border-zinc-800 bg-zinc-900">
               <FileText className="size-12 text-zinc-700" />
             </div>
+
             <h2 className="mb-2 text-xl font-semibold text-white">
               Nenhum resumo encontrado
             </h2>
+
             <p className="mx-auto mb-8 max-w-md text-zinc-500">
               As peladas finalizadas aparecerão aqui para consulta e
               compartilhamento.
@@ -135,14 +143,17 @@ export function Summaries() {
                 </div>
 
                 <button
-                  onClick={() =>
-                    navigate(`/summaries/${summary.id}`, {
-                      state: {
-                        summary,
-                      },
-                    })
-                  }
-                  className="flex w-full items-center justify-center gap-2 rounded-lg border border-emerald-600/30 bg-emerald-500/20 px-4 py-2.5 text-sm font-semibold text-emerald-400 transition-all hover:bg-emerald-500/30"
+                  type="button"
+                  onClick={() => {
+                    if (!summary.stats) return;
+
+                    setSelectedSummary({
+                      id: summary.id,
+                      pelada: summary.pelada,
+                      stats: summary.stats,
+                    });
+                  }}
+                  className="flex w-full items-center justify-center gap-2 rounded-lg border border-emerald-600/30 bg-emerald-500/20 px-4 py-2.5 text-sm font-semibold text-emerald-400 transition-all hover:bg-emerald-500/30 active:scale-[0.98]"
                 >
                   <FileText className="size-4" />
                   Ver Resumo
@@ -152,6 +163,13 @@ export function Summaries() {
           </div>
         )}
       </div>
+
+      {selectedSummary && (
+        <SummaryBottomSheet
+          summary={selectedSummary}
+          onClose={() => setSelectedSummary(null)}
+        />
+      )}
     </>
   );
 }
