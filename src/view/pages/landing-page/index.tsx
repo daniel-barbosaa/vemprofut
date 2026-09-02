@@ -12,7 +12,7 @@ export function LandingPage() {
   const navigate = useNavigate();
   return (
     <Screen className="box-border min-h-screen overflow-x-hidden bg-zinc-950 font-sans text-white">
-      <header className="fixed inset-x-0 top-0 z-50 border-b border-white/6 bg-zinc-950/70 backdrop-blur-xl">
+      <header className="fixed inset-x-0 top-0 z-50 border-b border-white/6 bg-zinc-950/70 pt-[env(safe-area-inset-top)] backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
           <span className="text-sm font-bold tracking-[-0.3px] text-white">
             vem<span className="text-emerald-400">ProFut</span>
