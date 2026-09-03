@@ -1,7 +1,7 @@
 import { cn } from "@/app/utils/class-name-merger";
 import { paths } from "@/router/paths";
 import { ArrowLeft, EllipsisVertical, History, Home } from "lucide-react";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BottomSheet } from "./bottom-sheet";
 import { Button } from "./button";
@@ -11,9 +11,16 @@ interface TopBarProps {
   collapsed?: boolean;
   backTo?: string;
   showMenu?: boolean;
+  rightContent?: ReactNode;
 }
 
-export function TopBar({ title, collapsed, backTo, showMenu }: TopBarProps) {
+export function TopBar({
+  title,
+  collapsed,
+  backTo,
+  showMenu,
+  rightContent,
+}: TopBarProps) {
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
 
@@ -54,36 +61,40 @@ export function TopBar({ title, collapsed, backTo, showMenu }: TopBarProps) {
           </h1>
         </div>
 
-        {showMenu && (
-          <>
-            <button
-              onClick={() => setShow(true)}
-              className={cn(
-                "rounded-full p-2 transition-colors hover:bg-zinc-800",
-              )}
-            >
-              <EllipsisVertical className="size-5 text-white" />
-            </button>
+        <div>
+          {rightContent}
 
-            <BottomSheet open={show} onClose={() => setShow(false)} title="">
-              <div className="space-y-2">
-                {sheetItems.map(({ icon: Icon, label, path }) => (
-                  <button
-                    key={path}
-                    onClick={() => {
-                      setShow(false);
-                      navigate(path);
-                    }}
-                    className="flex w-full items-center gap-3 rounded-2xl border border-zinc-800 bg-zinc-800/50 p-4 text-left text-zinc-200 transition-colors hover:bg-zinc-800"
-                  >
-                    <Icon className="size-5 text-emerald-400" />
-                    <span className="font-medium">{label}</span>
-                  </button>
-                ))}
-              </div>
-            </BottomSheet>
-          </>
-        )}
+          {showMenu && (
+            <>
+              <button
+                onClick={() => setShow(true)}
+                className={cn(
+                  "rounded-full p-2 transition-colors hover:bg-zinc-800",
+                )}
+              >
+                <EllipsisVertical className="size-5 text-white" />
+              </button>
+
+              <BottomSheet open={show} onClose={() => setShow(false)} title="">
+                <div className="space-y-2">
+                  {sheetItems.map(({ icon: Icon, label, path }) => (
+                    <button
+                      key={path}
+                      onClick={() => {
+                        setShow(false);
+                        navigate(path);
+                      }}
+                      className="flex w-full items-center gap-3 rounded-2xl border border-zinc-800 bg-zinc-800/50 p-4 text-left text-zinc-200 transition-colors hover:bg-zinc-800"
+                    >
+                      <Icon className="size-5 text-emerald-400" />
+                      <span className="font-medium">{label}</span>
+                    </button>
+                  ))}
+                </div>
+              </BottomSheet>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

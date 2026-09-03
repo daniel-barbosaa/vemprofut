@@ -18,6 +18,7 @@ export function PlayingTeamsSection({ pelada }: PlayingTeamsSectionProps) {
         <Trophy className="size-4" />
         Primeira Partida
       </h2>
+
       <div className="grid grid-cols-2 gap-4">
         {playingTeams.map((team, index) => (
           <motion.div

@@ -1,13 +1,15 @@
 import { useCollapsedHeader } from "@/app/hooks/use-collapsed-header";
 import { cn } from "@/app/utils/class-name-merger";
 import { usePeladaStore } from "@/store/pelada/pelada.store";
+import type { Team } from "@/store/pelada/types";
 import { TopBar } from "@/view/components/top-bar";
-import { Info, Shuffle } from "lucide-react";
+import copy from "copy-to-clipboard";
+import { Copy, Info, Shuffle } from "lucide-react";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 import { ConfirmRedrawModal } from "./confirm-redraw-modal";
 import { PlayingTeamsSection } from "./playing-teams-section";
-import { ReturnedTeamBanner } from "./returned-team-banner";
 import { StartMatchButton } from "./start-match-button";
 import { WaitingTeamsSection } from "./waiting-teams-section";
 
@@ -36,6 +38,34 @@ export function TeamDraw() {
     navigate("/match");
   };
 
+  function formatTeamsForWhatsApp(teams: Team[]) {
+    const lines = ["⚽ *TIMES SORTEADOS*", ""];
+
+    teams.forEach((team, index) => {
+      lines.push(`🟢 *${team.name}*`);
+
+      team.players.forEach((player) => {
+        lines.push(`• ${player.name}`);
+      });
+
+      if (index < teams.length - 1) {
+        lines.push("");
+      }
+    });
+
+    lines.push("", "🔥 *Boa pelada, rapaziada!*");
+
+    return lines.join("\n");
+  }
+
+  function handleCopyTeams() {
+    const message = formatTeamsForWhatsApp(pelada!.queue);
+
+    copy(message);
+
+    toast.success("Times copiados.");
+  }
+
   return (
     <>
       <TopBar
@@ -43,6 +73,16 @@ export function TeamDraw() {
         collapsed={collapsed}
         backTo={"/players"}
         showMenu
+        rightContent={
+          <button
+            type="button"
+            onClick={handleCopyTeams}
+            aria-label="Copiar times"
+            className="rounded-xl p-2 text-zinc-400 transition-transform active:scale-90"
+          >
+            <Copy className="size-5" />
+          </button>
+        }
       />
       <div className="px-6">
         <div className="mb-6">
@@ -98,8 +138,6 @@ export function TeamDraw() {
             </div>
           )}
         </div>
-
-        <ReturnedTeamBanner pelada={pelada} />
 
         <PlayingTeamsSection pelada={pelada} />
 
