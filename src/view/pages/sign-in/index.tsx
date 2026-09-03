@@ -1,27 +1,31 @@
 import GoogleIcon from "@/assets/google.svg";
+
 import { Button } from "@/view/components/button";
-import { FileText, Trophy, Users } from "lucide-react";
+
 import { motion } from "motion/react";
+
 import { useSignInController } from "./use-sign-in-controller";
 
 export function SignIn() {
   const { signInWithGoogle } = useSignInController();
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-linear-to-b from-zinc-950 via-zinc-900 to-emerald-950 px-6">
+    <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-zinc-950 px-6">
+      <div className="pointer-events-none absolute top-1/2 left-1/2 size-125 -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-500/6 blur-3xl" />
+
       <motion.div
-        initial={{ opacity: 0, y: 24 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="w-full max-w-md"
+        transition={{ duration: 0.45, ease: "easeOut" }}
+        className="relative z-10 w-full max-w-sm"
       >
-        <div className="mb-8 flex flex-col items-center justify-center">
+        <div className="mb-10 flex flex-col items-center">
           <motion.img
             src="/soccer-ball.svg"
-            alt="Bola"
-            className="mx-auto size-30"
+            alt="Bola de futebol"
+            className="mb-5 size-24"
             initial={{
-              x: -300,
+              x: -280,
               rotate: -1080,
             }}
             animate={{
@@ -33,32 +37,31 @@ export function SignIn() {
               ease: [0.16, 1, 0.3, 1],
             }}
           />
-          <h1 className="text-center text-4xl font-bold text-white">
+
+          <h1 className="text-4xl font-bold tracking-tight text-white">
             VemPro<span className="text-emerald-400">Fut</span>
           </h1>
+
+          <p className="mt-2 text-center text-sm text-zinc-500">
+            Sua pelada começa aqui.
+          </p>
         </div>
 
-        <div className="mb-8 space-y-3">
-          <div className="flex items-center gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/60 px-4 py-3 text-sm text-zinc-300 backdrop-blur-sm">
-            <Users className="h-5 w-5 shrink-0 text-emerald-400" />
-            <span>Monte times rapidamente</span>
+        <div className="rounded-3xl border border-zinc-800/80 bg-zinc-900/70 p-5 shadow-2xl shadow-black/20 backdrop-blur-xl">
+          <div className="mb-5">
+            <h2 className="text-lg font-semibold text-white">
+              Entrar no VemProFut
+            </h2>
+
+            <p className="mt-1 text-sm text-zinc-500">
+              Acesse sua conta para continuar.
+            </p>
           </div>
 
-          <div className="flex items-center gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/60 px-4 py-3 text-sm text-zinc-300 backdrop-blur-sm">
-            <FileText className="h-5 w-5 shrink-0 text-blue-400" />
-            <span>Gere resumos automáticos e compartilhe com amigos</span>
-          </div>
-
-          <div className="flex items-center gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/60 px-4 py-3 text-sm text-zinc-300 backdrop-blur-sm">
-            <Trophy className="h-5 w-5 shrink-0 text-yellow-400" />
-            <span>Salve o histórico das partidas</span>
-          </div>
-        </div>
-        <div className="rounded-3xl border border-zinc-800 bg-zinc-900/70 p-5 backdrop-blur-sm">
           <Button
             type="button"
             onClick={signInWithGoogle}
-            className="flex h-14 w-full items-center justify-center gap-3 rounded-2xl border border-zinc-700 bg-zinc-950 text-base font-semibold text-white transition-all hover:border-zinc-600 hover:bg-zinc-900"
+            className="flex h-14 w-full items-center justify-center gap-3 rounded-2xl border border-zinc-700 bg-white text-base font-semibold text-zinc-900 transition-transform hover:bg-white active:scale-[0.98]"
           >
             <img
               src={GoogleIcon}
@@ -73,6 +76,10 @@ export function SignIn() {
             Entre em segundos usando sua conta Google.
           </p>
         </div>
+
+        <p className="mt-8 text-center text-xs text-zinc-700">
+          Organize. Jogue. Compartilhe.
+        </p>
       </motion.div>
     </div>
   );
