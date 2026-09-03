@@ -1,20 +1,35 @@
 import { useActivePelada } from "@/app/hooks/use-active-pelada";
 import { usePeladaStore } from "@/store/pelada/pelada.store";
+
+import { BottomSheet } from "@/view/components/bottom-sheet";
 import { Screen } from "@/view/components/screen";
 import { Spinner } from "@/view/components/ui/spinner";
-import { Clock, History, Play, Plus, Trophy } from "lucide-react";
+
+import { Clock, History, LogOut, Menu, Play, Plus, Trophy } from "lucide-react";
+
 import { motion } from "motion/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+
+import { supabase } from "@/app/lib/supabase";
+
 import { useHomeController } from "./use-home-controller";
 
 export function Home() {
   const navigate = useNavigate();
+
   const { pelada, startMatch, startNextMatch } = usePeladaStore();
+
   const { finishPelada } = useHomeController();
-  const isMatchActive = pelada?.currentMatch?.isActive ?? false;
+
   const { isLoading } = useActivePelada();
+
+  const [showMenu, setShowMenu] = useState(false);
+
+  const isMatchActive = pelada?.currentMatch?.isActive ?? false;
+
   const nextTeams = pelada?.queue.slice(0, 2);
+
   const hasNextMatch = nextTeams?.length === 2;
 
   const handleStartMatch = () => {
@@ -22,6 +37,24 @@ export function Home() {
       startMatch();
       navigate("/match");
     }
+  };
+
+  const handleOpenSummaries = () => {
+    setShowMenu(false);
+    navigate("/summaries");
+  };
+
+  const handleSignOut = async () => {
+    setShowMenu(false);
+
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      console.error("Erro ao sair da conta:", error);
+      return;
+    }
+
+    navigate("/login");
   };
 
   useEffect(() => {
@@ -42,11 +75,12 @@ export function Home() {
         </p>
 
         <button
-          onClick={() => navigate("/summaries")}
-          className="flex items-center gap-2 rounded-xl border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-zinc-400 transition hover:text-emerald-400"
+          type="button"
+          onClick={() => setShowMenu(true)}
+          aria-label="Abrir menu"
+          className="rounded-xl p-2 text-zinc-400 transition-transform active:scale-90"
         >
-          <History className="size-4" />
-          Resumos
+          <Menu className="size-5" />
         </button>
       </div>
 
@@ -78,20 +112,25 @@ export function Home() {
                 <h2 className="mb-1 text-2xl font-bold text-white">
                   {pelada.name}
                 </h2>
+
                 <p className="text-sm text-emerald-400">Pelada em andamento</p>
               </div>
+
               <Trophy className="size-8 text-emerald-400" />
             </div>
 
             <div className="mb-6 grid grid-cols-2 gap-4">
               <div className="rounded-xl bg-zinc-900/50 p-4">
                 <div className="mb-1 text-xs text-zinc-400">Jogadores</div>
+
                 <div className="text-2xl font-bold text-white">
                   {pelada.players.length}
                 </div>
               </div>
+
               <div className="rounded-xl bg-zinc-900/50 p-4">
                 <div className="mb-1 text-xs text-zinc-400">Partidas</div>
+
                 <div className="text-2xl font-bold text-white">
                   {pelada.matches.length}
                 </div>
@@ -102,6 +141,7 @@ export function Home() {
               <div className="mb-6 rounded-2xl border border-emerald-700/30 bg-linear-to-br from-emerald-900/20 to-zinc-900 p-5">
                 <div className="mb-4 flex items-center gap-2">
                   <span className="size-2 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(74,222,128,0.8)]" />
+
                   <span className="text-xs font-semibold tracking-wide text-emerald-400 uppercase">
                     Próxima partida
                   </span>
@@ -111,9 +151,11 @@ export function Home() {
                   <p className="truncate text-right font-semibold text-white">
                     {nextTeams[0].name}
                   </p>
+
                   <span className="rounded-full border border-zinc-700 bg-zinc-950 px-2.5 py-1 text-xs font-bold text-zinc-400">
                     VS
                   </span>
+
                   <p className="truncate font-semibold text-white">
                     {nextTeams[1].name}
                   </p>
@@ -125,7 +167,7 @@ export function Home() {
               {isMatchActive ? (
                 <button
                   onClick={() => navigate("/match")}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 py-4 font-semibold text-white transition-all hover:bg-emerald-600 active:scale-95"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 py-4 font-semibold text-white transition-transform active:scale-[0.98]"
                 >
                   <Play className="size-5" />
                   Continuar Partida
@@ -133,7 +175,7 @@ export function Home() {
               ) : pelada.queue.length >= 2 ? (
                 <button
                   onClick={handleStartMatch}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 py-4 font-semibold text-white transition-all hover:bg-emerald-600 active:scale-95"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 py-4 font-semibold text-white transition-transform active:scale-[0.98]"
                 >
                   <Play className="size-5" />
                   Iniciar Próxima Partida
@@ -141,7 +183,7 @@ export function Home() {
               ) : (
                 <button
                   onClick={() => navigate("/players")}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 py-4 font-semibold text-white transition-all hover:bg-emerald-600 active:scale-95"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 py-4 font-semibold text-white transition-transform active:scale-[0.98]"
                 >
                   <Plus className="size-5" />
                   Adicionar Jogadores
@@ -158,7 +200,7 @@ export function Home() {
 
                   await finishPelada();
                 }}
-                className="w-full rounded-xl bg-zinc-800 py-3 font-medium text-zinc-300 transition-all hover:bg-zinc-700"
+                className="w-full rounded-xl bg-zinc-800 py-3 font-medium text-zinc-300 transition-transform active:scale-[0.98]"
               >
                 Encerrar Pelada
               </button>
@@ -170,6 +212,7 @@ export function Home() {
               <h3 className="mb-4 text-lg font-semibold text-white">
                 Últimas Partidas
               </h3>
+
               <div className="space-y-3">
                 {pelada.matches
                   .slice(-3)
@@ -181,10 +224,12 @@ export function Home() {
                     >
                       <div className="flex items-center gap-3">
                         <Clock className="size-4 text-zinc-500" />
+
                         <div>
                           <div className="font-medium text-white">
                             {match.teamA.name} vs {match.teamB.name}
                           </div>
+
                           <div className="text-sm text-zinc-500">
                             {new Date(match.startTime).toLocaleTimeString(
                               "pt-BR",
@@ -196,6 +241,7 @@ export function Home() {
                           </div>
                         </div>
                       </div>
+
                       <div className="text-xl font-bold text-emerald-400">
                         {match.teamA.score} - {match.teamB.score}
                       </div>
@@ -214,22 +260,56 @@ export function Home() {
           <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full border border-zinc-800 bg-zinc-900">
             <Trophy className="size-12 text-zinc-700" />
           </div>
+
           <h2 className="mb-2 text-xl font-semibold text-white">
             Nenhuma pelada ativa
           </h2>
+
           <p className="mb-8 text-zinc-500">
             Crie uma nova pelada para começar
           </p>
 
           <button
             onClick={() => navigate("/create")}
-            className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-8 py-4 font-semibold text-white transition-all hover:bg-emerald-600 active:scale-95"
+            className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-8 py-4 font-semibold text-white transition-transform active:scale-[0.98]"
           >
             <Plus className="size-5" />
             Nova Pelada
           </button>
         </motion.div>
       )}
+
+      <BottomSheet
+        open={showMenu}
+        onClose={() => setShowMenu(false)}
+        showHeader={false}
+      >
+        <div className="pb-2">
+          <div className="mb-4">
+            <p className="text-lg font-semibold text-white">VemProFut</p>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleOpenSummaries}
+            className="flex w-full items-center gap-3 rounded-xl px-3 py-3.5 text-left text-zinc-200 transition-colors active:bg-zinc-800"
+          >
+            <History className="size-5 text-zinc-400" />
+
+            <span className="text-sm font-medium">Resumos</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={handleSignOut}
+            className="mt-1 flex w-full items-center gap-3 rounded-xl px-3 py-3.5 text-left text-red-400 transition-colors active:bg-red-500/10"
+          >
+            <LogOut className="size-5" />
+
+            <span className="text-sm font-medium">Sair da conta</span>
+          </button>
+        </div>
+      </BottomSheet>
     </Screen>
   );
 }
