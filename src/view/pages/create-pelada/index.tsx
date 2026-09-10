@@ -6,7 +6,7 @@ import { ArrowRight, CircleAlert } from "lucide-react";
 import { useCreatePeladaController } from "./use-create-pelada-controller";
 
 export function CreatePelada() {
-  const { handleSubmit, register, errors, watch, setValue } =
+  const { handleSubmit, register, errors, watch, setValue, isPending } =
     useCreatePeladaController();
   const { collapsed } = useCollapsedHeader();
 
@@ -224,8 +224,13 @@ export function CreatePelada() {
             </div>
           </div>
 
-          <Button type="submit" className="mt-8">
-            Continuar
+          <Button
+            type="submit"
+            className="mt-8"
+            disabled={isPending}
+            isLoading={isPending}
+          >
+            {isPending ? "Criando pelada..." : "Continuar"}
             <ArrowRight className="size-5" />
           </Button>
         </form>

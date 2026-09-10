@@ -29,7 +29,7 @@ export function useCreatePeladaController() {
     defaultValues: createPeladaFormDefaultValues,
   });
 
-  const { mutateAsync: savePelada } = useMutation({
+  const { mutateAsync: savePelada, isPending } = useMutation({
     mutationFn: (pelada: Pelada) => {
       if (!user) {
         throw new Error("Usuário não encontrado");
@@ -51,5 +51,5 @@ export function useCreatePeladaController() {
     navigate("/players");
   });
 
-  return { handleSubmit, register, errors, watch, setValue };
+  return { handleSubmit, register, errors, watch, setValue, isPending };
 }

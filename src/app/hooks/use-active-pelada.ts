@@ -5,13 +5,14 @@ import { useAuth } from "./use-auth";
 
 export function useActivePelada() {
   const { user } = useAuth();
-  const { data, isFetching } = useQuery({
+  const { data, isFetching, isSuccess } = useQuery({
     queryKey: [QUERY_CACHE_KEYS.pelada, user?.id],
     queryFn: () => peladaServices.findActiveByOwnerId(user!.id),
+    refetchOnMount: "always",
     refetchOnWindowFocus: true,
     enabled: !!user,
-    staleTime: Infinity,
+    staleTime: 0,
   });
 
-  return { data, isLoading: isFetching };
+  return { data, isLoading: isFetching, isSuccess };
 }

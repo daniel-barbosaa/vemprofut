@@ -3,11 +3,13 @@ import { usePeladaStore } from "@/store/pelada/pelada.store";
 import { useEffect } from "react";
 
 export function PeladaInitializer() {
-  const { data: peladaFromServer } = useActivePelada();
+  const { data: peladaFromServer, isSuccess } = useActivePelada();
 
   const { pelada, setPelada, clearPelada } = usePeladaStore();
 
   useEffect(() => {
+    if (!isSuccess) return;
+
     if (peladaFromServer === null) {
       clearPelada();
       return;
@@ -16,7 +18,7 @@ export function PeladaInitializer() {
     if (!pelada && peladaFromServer) {
       setPelada(peladaFromServer);
     }
-  }, [pelada, peladaFromServer, setPelada, clearPelada]);
+  }, [pelada, peladaFromServer, isSuccess, setPelada, clearPelada]);
 
   return null;
 }

@@ -6,9 +6,11 @@ export async function findActiveByOwnerId(
 ): Promise<Pelada | null> {
   const { data, error } = await supabase
     .from("peladas")
-    .select("*")
+    .select("data")
     .eq("owner_id", userId)
     .eq("status", "active")
+    .order("created_at", { ascending: false })
+    .limit(1)
     .maybeSingle();
 
   if (error) {
