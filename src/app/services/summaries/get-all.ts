@@ -1,3 +1,4 @@
+import { PAGINATION } from "@/app/constant/pagination";
 import { supabase } from "@/app/lib/supabase";
 import type { Pelada } from "@/store/pelada/types";
 
@@ -8,14 +9,16 @@ export interface Summary {
   created_at: string;
 }
 
-type SummaryResponse = Summary[];
+export async function getAll(page: number): Promise<Summary[]> {
+  const from = (page - 1) * PAGINATION.PAGE_SIZE;
+  const to = from + PAGINATION.PAGE_SIZE - 1;
 
-export async function getAll(): Promise<SummaryResponse> {
   const { data, error } = await supabase
     .from("summaries")
     .select("*")
+    .range(from, to)
     .order("created_at", { ascending: false })
-    .overrideTypes<SummaryResponse>();
+    .overrideTypes<Summary[]>();
 
   if (error) {
     throw error;

@@ -2,7 +2,8 @@ import { useSummaries } from "@/app/hooks/use-summary";
 import { buildSummary } from "./utils/build-summary";
 
 export function useSummaryController() {
-  const { summaries, isLoading } = useSummaries();
+  const { summaries, isLoading, nextPage, hasNextPage, isLoadingNextPage } =
+    useSummaries();
 
   const summariesBuilt = summaries.map((summary) => ({
     id: summary.id,
@@ -11,7 +12,10 @@ export function useSummaryController() {
   }));
 
   return {
-    summariesBuilt,
+    summariesBuilt: summariesBuilt,
     isLoading,
+    nextPage,
+    hasNextPage,
+    isLoadingNextPage,
   };
 }

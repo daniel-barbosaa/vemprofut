@@ -1,5 +1,6 @@
 import { sentryVitePlugin } from "@sentry/vite-plugin";
 import tailwindcss from "@tailwindcss/vite";
+import { devtools } from "@tanstack/devtools-vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 import { defineConfig } from "vite";
@@ -33,6 +34,9 @@ export default defineConfig({
     sentryVitePlugin({
       org: "myprojects-ih",
       project: "vemprofut",
+    }),
+    devtools({
+      removeDevtoolsOnBuild: true,
     }),
   ],
   build: {

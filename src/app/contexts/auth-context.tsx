@@ -1,6 +1,6 @@
+import { usePeladaStore } from "@/store/pelada/pelada.store";
 import type { User } from "@supabase/supabase-js";
 import { createContext, useEffect, useState, type ReactNode } from "react";
-import { usePeladaStore } from "@/store/pelada/pelada.store";
 import { supabase } from "../lib/supabase";
 
 interface AuthContextValue {

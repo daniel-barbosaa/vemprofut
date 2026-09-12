@@ -1,6 +1,8 @@
 import { Theme } from "@radix-ui/themes";
 import * as Sentry from "@sentry/react";
+import { TanStackDevtools } from "@tanstack/react-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
 import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "./app/contexts/auth-context";
 import { Router } from "./router";
@@ -41,6 +43,15 @@ export default function App() {
               />
             </AuthProvider>
           </Theme>
+
+          <TanStackDevtools
+            plugins={[
+              {
+                name: "TanStack Query",
+                render: <ReactQueryDevtoolsPanel />,
+              },
+            ]}
+          />
         </QueryClientProvider>
       </Sentry.ErrorBoundary>
     </>

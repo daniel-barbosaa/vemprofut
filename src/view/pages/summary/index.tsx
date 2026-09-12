@@ -2,18 +2,25 @@ import { useCollapsedHeader } from "@/app/hooks/use-collapsed-header";
 import { cn } from "@/app/utils/class-name-merger";
 import { paths } from "@/router/paths";
 import { TopBar } from "@/view/components/top-bar";
-import { Spinner } from "@/view/components/ui/spinner";
 import { Calendar, FileText, Target, Trophy } from "lucide-react";
 import { motion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
+import { Spinner } from "@/view/components/ui/spinner";
 import { SummaryBottomSheet } from "./summary-bottom-sheet";
 import type { SummaryCardData } from "./summary-card";
 import { useSummaryController } from "./use-summary-controller";
 
 export function Summaries() {
-  const { summariesBuilt, isLoading } = useSummaryController();
+  const {
+    summariesBuilt,
+    isLoading,
+    nextPage,
+    hasNextPage,
+    isLoadingNextPage,
+  } = useSummaryController();
   const { collapsed } = useCollapsedHeader();
+  const contentCaptionRef = useRef<null | HTMLDivElement>(null);
 
   const [selectedSummary, setSelectedSummary] =
     useState<SummaryCardData | null>(null);
@@ -28,12 +35,39 @@ export function Summaries() {
     });
   };
 
-  if (isLoading) {
+  useEffect(() => {
+    if (!contentCaptionRef.current) {
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries, obs) => {
+        const { isIntersecting } = entries[0];
+
+        if (!hasNextPage) {
+          obs.disconnect();
+          return;
+        }
+
+        if (isIntersecting && hasNextPage) {
+          nextPage();
+        }
+      },
+      {
+        rootMargin: "300px",
+      },
+    );
+
+    observer.observe(contentCaptionRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [hasNextPage, nextPage]);
+
+  if (isLoading && summariesBuilt.length === 0) {
     return (
-      <div className="min-h-screen bg-zinc-950">
-        <div className="mx-auto flex min-h-screen max-w-2xl items-center justify-center">
-          <Spinner size="md" />
-        </div>
+      <div className="mx-auto flex min-h-screen max-w-2xl items-center justify-center">
+        <Spinner size="md" />
       </div>
     );
   }
@@ -86,9 +120,9 @@ export function Summaries() {
             {summariesBuilt.map((summary, index) => (
               <motion.div
                 key={summary.id}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
+                transition={{ delay: index * 0.01, duration: 0.2 }}
                 className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5 transition-all hover:border-emerald-700/30"
               >
                 <div className="mb-3 flex items-center gap-2 text-sm text-zinc-400">
@@ -162,6 +196,14 @@ export function Summaries() {
             ))}
           </div>
         )}
+        <div ref={contentCaptionRef}>
+          {isLoadingNextPage && (
+            <div className="flex items-center justify-center gap-2 py-6 text-sm text-zinc-500">
+              <Spinner className="size-4" />
+              <span>Carregando mais resumos...</span>
+            </div>
+          )}
+        </div>
       </div>
 
       {selectedSummary && (

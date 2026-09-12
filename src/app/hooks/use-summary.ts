@@ -1,22 +1,30 @@
-import { buildSummary } from "@/view/pages/summary/utils/build-summary";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { PAGINATION } from "../constant/pagination";
+import { QUERY_CACHE_KEYS } from "../constant/query-cache-keys";
 import { summarieService } from "../services/summaries";
 
 export function useSummaries() {
-  const { data, isFetching } = useQuery({
-    queryKey: ["summaries"],
-    queryFn: summarieService.getAll,
-    select: (summaries) =>
-      summaries.map((summary) => ({
-        id: summary.id,
-        pelada: summary.pelada,
-        stats: buildSummary(summary.pelada),
-      })),
-    staleTime: Infinity,
-  });
+  const { data, isPending, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfiniteQuery({
+      queryKey: [QUERY_CACHE_KEYS.summary],
+      initialPageParam: 1,
+      queryFn: ({ pageParam }) => summarieService.getAll(pageParam),
+      getNextPageParam: (lastPage, _allPages, lastPageParam) => {
+        if (lastPage.length < PAGINATION.PAGE_SIZE) {
+          return null;
+        }
+
+        return lastPageParam + 1;
+      },
+      staleTime: Infinity,
+    });
+  const summaries = data?.pages.flatMap((page) => page);
 
   return {
-    summaries: data ?? [],
-    isLoading: isFetching,
+    summaries: summaries ?? [],
+    isLoading: isPending,
+    nextPage: fetchNextPage,
+    hasNextPage,
+    isLoadingNextPage: isFetchingNextPage,
   };
 }
