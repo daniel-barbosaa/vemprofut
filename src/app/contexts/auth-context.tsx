@@ -1,4 +1,3 @@
-import { usePeladaStore } from "@/store/pelada/pelada.store";
 import type { User } from "@supabase/supabase-js";
 import { createContext, useEffect, useState, type ReactNode } from "react";
 import { supabase } from "../lib/supabase";
@@ -13,8 +12,6 @@ const AuthContext = createContext({} as AuthContextValue);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const resetPelada = usePeladaStore((state) => state.resetPelada);
-
   useEffect(() => {
     async function loadSession() {
       const {
@@ -22,9 +19,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } = await supabase.auth.getSession();
 
       setUser(session?.user ?? null);
-      if (!session) {
-        resetPelada();
-      }
       setLoading(false);
     }
     loadSession();
@@ -33,16 +27,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
-
-      if (!session) {
-        resetPelada();
-      }
     });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, [resetPelada]);
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, loading }}>

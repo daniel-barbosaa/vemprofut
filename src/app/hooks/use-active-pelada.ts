@@ -9,7 +9,7 @@ export function useActivePelada() {
     queryKey: [QUERY_CACHE_KEYS.pelada, user?.id],
     queryFn: () => peladaServices.findActiveByOwnerId(user!.id),
     refetchOnMount: "always",
-    refetchOnWindowFocus: true,
+    refetchOnWindowFocus: false,
     enabled: !!user,
     staleTime: 0,
   });

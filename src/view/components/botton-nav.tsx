@@ -1,5 +1,6 @@
 import { useAuth } from "@/app/hooks/use-auth";
 import { useFeedback } from "@/app/hooks/use-feedback";
+import { usePersistPelada } from "@/app/hooks/use-persist-pelada";
 import { supabase } from "@/app/lib/supabase";
 import { cn } from "@/app/utils/class-name-merger";
 import { ADMIN_EMAIL } from "@/router/admin-guard";
@@ -32,7 +33,8 @@ interface MenuItem {
 export function BottomNav() {
   const { user } = useAuth();
   const { data } = useFeedback();
-  const { pelada, resetPelada } = usePeladaStore();
+  const { pelada } = usePeladaStore();
+  const { persistPelada } = usePersistPelada();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -49,8 +51,14 @@ export function BottomNav() {
 
   async function signOut() {
     setShow(false);
+
+    try {
+      await persistPelada();
+    } catch (error) {
+      console.error("Erro ao salvar a pelada antes de sair:", error);
+    }
+
     await supabase.auth.signOut();
-    resetPelada();
   }
 
   const navItems = [

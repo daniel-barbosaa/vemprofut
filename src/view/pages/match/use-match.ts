@@ -99,7 +99,7 @@ export function useMatch() {
 
       whistle.play();
 
-      toast("Limite de gols atingido! Encerre a partida.", {
+      toast("Limite de gols atingido!", {
         icon: "⚽",
       });
     }
@@ -140,7 +140,7 @@ export function useMatch() {
 
           whistle.play();
 
-          toast("Tempo encerrado! Encerre a partida.", {
+          toast("Tempo encerrado!", {
             icon: "⏱️",
           });
         }
