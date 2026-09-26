@@ -33,6 +33,9 @@ jobs:
 
       - name: Tests
         run: yarn test
+        env:
+          VITE_SUPABASE_URL: https://test.supabase.co
+          VITE_SUPABASE_PUBLISHABLE_KEY: test-key
 
       - name: Build
         run: yarn build
