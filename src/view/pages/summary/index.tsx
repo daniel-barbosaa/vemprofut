@@ -48,12 +48,12 @@ export function Summaries() {
           return;
         }
 
-        if (isIntersecting && hasNextPage) {
+        if (isIntersecting && hasNextPage && !isLoadingNextPage) {
           nextPage();
         }
       },
       {
-        rootMargin: "300px",
+        rootMargin: "50px",
       },
     );
 
@@ -196,7 +196,7 @@ export function Summaries() {
             ))}
           </div>
         )}
-        <div ref={contentCaptionRef}>
+        <div ref={contentCaptionRef} className="h-1">
           {isLoadingNextPage && (
             <div className="flex items-center justify-center gap-2 py-6 text-sm text-zinc-500">
               <Spinner className="size-4" />
