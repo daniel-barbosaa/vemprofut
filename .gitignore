@@ -13,7 +13,8 @@ dist-ssr
 *.local
 .env
 supabase/temp/
-testing.md
+how-to-test.md
+todo.md
 
 # Editor directories and files
 .vscode/*
