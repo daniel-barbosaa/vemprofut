@@ -4,6 +4,8 @@ import { buildSummary } from "./build-summary";
 
 const mockPelada = makePeladaMock();
 
+// Continuar os caso de teste individual para cada dado: gols, artilheiro, etc...
+
 describe("buildSummary", () => {
   it("should return null case not matches", () => {
     const summary = buildSummary({

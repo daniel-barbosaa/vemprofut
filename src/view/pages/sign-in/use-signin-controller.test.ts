@@ -3,23 +3,23 @@ import { describe, expect, it, vi } from "vitest";
 import { useSignInController } from "./use-sign-in-controller";
 
 describe("useSignInController", () => {
-  it("shold sign in with Google", async () => {
-    const signInWithOAuth = vi
-      .spyOn(supabase.auth, "signInWithOAuth")
-      .mockResolvedValue({
-        data: {
-          provider: "google",
-          url: "https://example.com",
-        },
-        error: null,
-      });
+  const signInWithOAuthMock = vi
+    .spyOn(supabase.auth, "signInWithOAuth")
+    .mockResolvedValue({
+      data: {
+        provider: "google",
+        url: "https://example.com",
+      },
+      error: null,
+    });
 
+  it("shold sign in with Google", async () => {
     const { signInWithGoogle } = useSignInController();
 
     await signInWithGoogle();
 
-    expect(signInWithOAuth).toHaveBeenCalledOnce();
-    expect(signInWithOAuth).toHaveBeenCalledWith({
+    expect(signInWithOAuthMock).toHaveBeenCalledOnce();
+    expect(signInWithOAuthMock).toHaveBeenCalledWith({
       provider: "google",
     });
   });
@@ -27,7 +27,7 @@ describe("useSignInController", () => {
   it("should propagate the sign in error", async () => {
     const error = new Error("OAuth Failed");
 
-    vi.spyOn(supabase.auth, "signInWithOAuth").mockRejectedValue(error);
+    signInWithOAuthMock.mockRejectedValue(error);
 
     const { signInWithGoogle } = useSignInController();
 
