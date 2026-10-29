@@ -1,4 +1,4 @@
-import type { Match, Pelada, Player } from "@/store/pelada/types";
+import type { Pelada, Player } from "@/store/pelada/types";
 
 export interface SummaryItem {
   champion: {
@@ -20,15 +20,8 @@ export interface SummaryItem {
     totalMatches: number;
     winRate: number;
   }[];
-  worstTeam: {
-    id: string;
-    name: string;
-    wins: number;
-    winRate: number;
-  };
   matchesCount: number;
   goals: number;
-  balancedMatch?: Match;
   createdAt: string;
   topScorer: Player;
 }

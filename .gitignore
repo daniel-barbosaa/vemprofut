@@ -15,6 +15,7 @@ dist-ssr
 supabase/temp/
 how-to-test.md
 todo.md
+coverage
 
 # Editor directories and files
 .vscode/*

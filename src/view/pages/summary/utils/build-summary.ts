@@ -113,41 +113,21 @@ export function buildSummary(pelada: Pelada): SummaryItem | null {
 
   const bestStreak = teams.filter((team) => team.maxStreak === highestStreak);
 
-  const worstTeam = [...teams].sort((a, b) => {
-    if (a.wins !== b.wins) {
-      return a.wins - b.wins;
-    }
-
-    return a.winRate - b.winRate;
-  })[0];
-
-  const balancedMatch = [...pelada.matches]
-    .filter(
-      (match) =>
-        match.teamA.score !== undefined && match.teamB.score !== undefined,
-    )
-    .sort((a, b) => {
-      const diffA = Math.abs(a.teamA.score - a.teamB.score);
-      const diffB = Math.abs(b.teamA.score - b.teamB.score);
-
-      return diffA - diffB;
-    })[0];
-
   const topScorer = [...pelada.players]
     .filter((player) => player.goals > 0)
     .sort((a, b) => b.goals - a.goals)[0];
 
+  const goals = pelada.matches.reduce(
+    (total, match) => total + match.teamA.score + match.teamB.score,
+    0,
+  );
+
   return {
     createdAt: pelada.createdAt.toString(),
     matchesCount: pelada.matches.length,
-    goals: pelada.matches.reduce(
-      (total, match) => total + match.teamA.score + match.teamB.score,
-      0,
-    ),
+    goals,
     champion,
     bestStreak,
-    worstTeam,
-    balancedMatch,
     topScorer,
   };
 }
