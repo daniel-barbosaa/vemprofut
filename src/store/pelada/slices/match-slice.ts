@@ -1,3 +1,4 @@
+import { v4 as uuid } from "uuid";
 import type { StateCreator } from "zustand";
 import type { PeladaState } from "../pelada-state";
 import type { Match } from "../types";
@@ -35,7 +36,7 @@ export const createMatchSlice: StateCreator<PeladaState, [], [], MatchSlice> = (
       isPaused: false,
       pausedAt: undefined,
       totalPausedTime: 0,
-      lastGoal: null,
+      goals: [],
     };
 
     set({
@@ -59,10 +60,15 @@ export const createMatchSlice: StateCreator<PeladaState, [], [], MatchSlice> = (
 
       const updatedMatch = {
         ...match,
-        lastGoal: {
-          teamId,
-          playerId: playerId ?? null,
-        },
+        goals: [
+          ...match.goals,
+          {
+            id: uuid(),
+            teamId,
+            playerId: playerId ?? null,
+            createdAt: Date.now(),
+          },
+        ],
       };
 
       if (match.teamA.id === teamId) {
@@ -94,7 +100,7 @@ export const createMatchSlice: StateCreator<PeladaState, [], [], MatchSlice> = (
       };
     });
   },
-  removeGoal: (teamId: string, playerId?: string) => {
+  removeGoal: (goalId: string) => {
     set((state) => {
       const pelada = state.pelada;
 
@@ -104,26 +110,34 @@ export const createMatchSlice: StateCreator<PeladaState, [], [], MatchSlice> = (
 
       const match = pelada.currentMatch;
 
+      const goalToRemove = match.goals.find((goal) => goal.id === goalId);
+
+      if (!goalToRemove) return state;
+
+      const updatedGoals = match.goals.filter((goal) => goal.id !== goalId);
+
       const updatedMatch = {
         ...match,
-        lastGoal: null,
+        goals: updatedGoals,
+        teamA: {
+          ...match.teamA,
+          score:
+            goalToRemove.teamId === match.teamA.id
+              ? Math.max(0, match.teamA.score - 1)
+              : match.teamA.score,
+        },
+        teamB: {
+          ...match.teamB,
+          score:
+            goalToRemove.teamId === match.teamB.id
+              ? Math.max(0, match.teamB.score - 1)
+              : match.teamB.score,
+        },
       };
 
-      if (match.teamA.id === teamId && match.teamA.score > 0) {
-        updatedMatch.teamA = {
-          ...match.teamA,
-          score: match.teamA.score - 1,
-        };
-      } else if (match.teamB.id === teamId && match.teamB.score > 0) {
-        updatedMatch.teamB = {
-          ...match.teamB,
-          score: match.teamB.score - 1,
-        };
-      }
-
-      const updatedPlayers = playerId
+      const updatedPlayers = goalToRemove.playerId
         ? pelada.players.map((player) =>
-            player.id === playerId
+            player.id === goalToRemove.playerId
               ? {
                   ...player,
                   goals: Math.max(0, player.goals - 1),

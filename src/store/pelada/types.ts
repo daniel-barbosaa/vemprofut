@@ -47,6 +47,13 @@ export type LastGoal = {
   playerId: string | null;
 };
 
+type Goal = {
+  id: string;
+  teamId: string;
+  playerId: string | null;
+  createdAt: number;
+};
+
 export interface Match {
   id: string;
   teamA: Team;
@@ -74,7 +81,7 @@ export interface Match {
   autoRested?: boolean; // Se algum time foi automaticamente para descanso após essa partida
   restingTeamId?: string; // ID do time que foi para descanso após essa partida
 
-  lastGoal: LastGoal | null;
+  goals: Goal[];
 }
 
 export interface Pelada {

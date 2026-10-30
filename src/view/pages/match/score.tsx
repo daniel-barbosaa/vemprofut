@@ -11,7 +11,7 @@ interface TeamScoreCardProps {
   isActive: boolean;
   maxConsecutiveWins: number;
   addGoal(teamId: string): void;
-  removeGoal(teamId: string, playerId?: string | null): void;
+  onRemoveGoal(): void;
 }
 
 function TeamScoreCard({
@@ -21,7 +21,7 @@ function TeamScoreCard({
   isActive,
   maxConsecutiveWins,
   addGoal,
-  removeGoal,
+  onRemoveGoal,
 }: TeamScoreCardProps) {
   const hasConsecutiveWins = team.consecutiveWins > 0;
   const reachedRestLimit = team.consecutiveWins >= maxConsecutiveWins;
@@ -91,7 +91,7 @@ function TeamScoreCard({
           </button>
 
           <button
-            onClick={() => removeGoal(team.id)}
+            onClick={onRemoveGoal}
             disabled={!isActive || isPaused || team.score === 0}
             className="w-full rounded-lg bg-zinc-800 py-2 text-xs font-semibold text-zinc-300 transition-all hover:bg-zinc-700 active:scale-95 disabled:bg-zinc-900 disabled:text-zinc-700"
           >
@@ -154,10 +154,12 @@ export function Score({
         addGoal={() => {
           handleAddGoal(match.teamA);
         }}
-        removeGoal={() => {
-          if (!match.lastGoal) return;
+        onRemoveGoal={() => {
+          const lastGoal = [...match.goals].find(
+            (goal) => goal.teamId === match.teamA.id,
+          );
 
-          removeGoal(match.lastGoal.teamId, match.lastGoal.playerId);
+          if (lastGoal) removeGoal(lastGoal.id);
         }}
       />
 
@@ -174,10 +176,12 @@ export function Score({
         addGoal={() => {
           handleAddGoal(match.teamB);
         }}
-        removeGoal={() => {
-          if (!match.lastGoal) return;
+        onRemoveGoal={() => {
+          const lastGoal = [...match.goals].find(
+            (goal) => goal.teamId === match.teamB.id,
+          );
 
-          removeGoal(match.lastGoal.teamId, match.lastGoal.playerId);
+          if (lastGoal) removeGoal(lastGoal.id);
         }}
       />
 

@@ -38,7 +38,7 @@ export function makeMatchMock(props?: Partial<Match>): Match {
     duration: 600,
     goalLimit: 3,
     isActive: false,
-    lastGoal: null,
+    goals: [],
     ...props,
   };
 }

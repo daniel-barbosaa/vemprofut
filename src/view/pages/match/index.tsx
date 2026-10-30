@@ -25,6 +25,7 @@ export function Match() {
   if (!pelada || !match) {
     return null;
   }
+
   return (
     <Screen>
       <TeamReturnedNotice match={match} />
