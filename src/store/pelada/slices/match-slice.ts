@@ -6,7 +6,7 @@ import type { Match } from "../types";
 export interface MatchSlice {
   startMatch(): void;
   addGoal(teamId: string, playerId?: string): void;
-  removeGoal(teamId: string, playerId?: string): void;
+  removeGoal(goalId: string): void;
   endMatch(): void;
   pauseMatch(): void;
   resumeMatch(): void;

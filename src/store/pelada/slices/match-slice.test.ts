@@ -17,9 +17,11 @@ vi.mock("uuid", () => {
   };
 });
 
+const getSut = () => usePeladaStore.getState();
+
 describe("createMatchSlice", () => {
   beforeEach(() => {
-    usePeladaStore.getState().setPelada({
+    getSut().setPelada({
       ...mockPelada,
       matches: [{ ...mockMatch }],
       currentMatch: { ...mockMatch },
@@ -33,11 +35,24 @@ describe("createMatchSlice", () => {
       playerId: "player-2",
       createdAt: Number(new Date()),
     };
-    usePeladaStore.getState().addGoal("team-a", "player-2");
+    getSut().addGoal("team-a", "player-2");
 
-    const pelada = usePeladaStore.getState().pelada;
+    const pelada = getSut().pelada;
 
     expect(pelada?.currentMatch?.goals).toContainEqual(goal);
     expect(pelada?.currentMatch?.goals).toHaveLength(1);
+  });
+
+  it("should remove goal correctly", () => {
+    getSut().addGoal("team-a", "player-2");
+
+    getSut().removeGoal("mocked-id");
+
+    const pelada = getSut().pelada;
+
+    expect(pelada?.currentMatch?.goals).toHaveLength(0);
+    expect(pelada?.currentMatch?.goals).not.toContainEqual(
+      expect.objectContaining({ id: "mocked-id" }),
+    );
   });
 });
