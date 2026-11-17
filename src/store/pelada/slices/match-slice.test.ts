@@ -1,12 +1,14 @@
 import {
   makeMatchMock,
   makePeladaMock,
+  makeTeamMock,
 } from "@tests/factories/make-pelada-mock";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { usePeladaStore } from "../pelada.store";
 
 const mockPelada = makePeladaMock();
 const mockMatch = makeMatchMock();
+const mockTeam = makeTeamMock();
 const date = new Date();
 
 vi.useFakeTimers();
@@ -54,5 +56,26 @@ describe("createMatchSlice", () => {
     expect(pelada?.currentMatch?.goals).not.toContainEqual(
       expect.objectContaining({ id: "mocked-id" }),
     );
+  });
+
+  it("should start match correctly", () => {
+    getSut().setPelada({
+      ...mockPelada,
+      matches: [{ ...mockMatch }],
+      queue: [
+        { ...mockTeam, id: "team-c", name: "Time C" },
+        { ...mockTeam, id: "team-d", name: "Time D" },
+      ],
+    });
+
+    getSut().startMatch();
+
+    const pelada = getSut().pelada;
+
+    expect(pelada?.currentMatch).toMatchObject({
+      teamA: { id: "team-c", name: "Time C", score: 0 },
+      teamB: { id: "team-d", name: "Time D", score: 0 },
+      isActive: true,
+    });
   });
 });

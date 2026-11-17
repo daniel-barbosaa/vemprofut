@@ -18,7 +18,7 @@ export function makePeladaMock(props?: Partial<Pelada>): Pelada {
     ...props,
   };
 }
-function makeTeamMock(props?: Partial<Team>): Team {
+export function makeTeamMock(props?: Partial<Team>): Team {
   return {
     id: "team-a",
     name: "Time A",
