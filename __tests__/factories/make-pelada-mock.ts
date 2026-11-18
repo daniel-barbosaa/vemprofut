@@ -1,4 +1,5 @@
 import type { Match, Pelada, Team } from "@/store/pelada/types";
+import { v4 as uuid } from "uuid";
 
 export function makePeladaMock(props?: Partial<Pelada>): Pelada {
   return {
@@ -31,7 +32,7 @@ export function makeTeamMock(props?: Partial<Team>): Team {
 
 export function makeMatchMock(props?: Partial<Match>): Match {
   return {
-    id: "match-1",
+    id: uuid(),
     teamA: makeTeamMock({ id: "team-a", name: "Time A" }),
     teamB: makeTeamMock({ id: "team-b", name: "Time B", consecutiveWins: 0 }),
     startTime: 1_700_000_000_000,

@@ -78,4 +78,54 @@ describe("createMatchSlice", () => {
       isActive: true,
     });
   });
+
+  it("should end match correctly", () => {
+    getSut().endMatch();
+
+    const { pelada } = getSut();
+
+    expect(pelada?.currentMatch).toMatchObject({
+      isActive: false,
+    });
+    expect(pelada?.matches).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "mocked-id",
+          isActive: false,
+        }),
+      ]),
+    );
+  });
+
+  it("should pause match correctly ", () => {
+    getSut().pauseMatch();
+
+    const { pelada } = getSut();
+
+    expect(pelada?.currentMatch).toMatchObject({
+      isPaused: true,
+      pausedAt: Date.now(),
+    });
+  });
+
+  it("should resume match correctly", () => {
+    const { pauseMatch, resumeMatch, pelada } = getSut();
+
+    pauseMatch();
+    resumeMatch();
+
+    expect(pelada?.currentMatch).toMatchObject({
+      isPaused: false,
+    });
+  });
+
+  it("should intialize overtime correctly", () => {
+    const { startOvertime, pelada } = getSut();
+
+    startOvertime();
+
+    expect(pelada?.currentMatch).toMatchObject({
+      isOvertime: true,
+    });
+  });
 });
