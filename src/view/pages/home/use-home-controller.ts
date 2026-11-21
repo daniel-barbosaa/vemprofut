@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 
 export function useHomeController() {
   const { user } = useAuth();
-  const { pelada, resetPelada } = usePeladaStore();
+  const { pelada, clearPelada } = usePeladaStore();
   const { mutateAsync: updatePelada } = useUpdatePelada();
   const queryClient = useQueryClient();
 
@@ -32,7 +32,7 @@ export function useHomeController() {
 
       queryClient.setQueryData([QUERY_CACHE_KEYS.pelada, user?.id], null);
 
-      resetPelada();
+      clearPelada();
 
       toast.success("Pelada finalizada");
     } catch {

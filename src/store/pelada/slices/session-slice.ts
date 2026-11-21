@@ -6,7 +6,6 @@ export interface SessionSlice {
   pelada: Pelada | null;
   setPelada(pelada: Pelada): void;
   createPelada(data: CreatePeladaDTO): Pelada;
-  resetPelada(): void;
   clearPelada(): void;
 }
 
@@ -42,9 +41,6 @@ export const createSessionSlice: StateCreator<SessionSlice> = (set) => ({
     };
     set({ pelada: newPelada });
     return newPelada;
-  },
-  resetPelada: () => {
-    set({ pelada: null });
   },
   clearPelada: () => {
     set({ pelada: null });
