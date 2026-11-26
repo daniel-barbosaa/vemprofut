@@ -10,7 +10,6 @@ export type PlayerStatus =
 export interface Player {
   id: string;
   name: string;
-  status: PlayerStatus;
   isGoalkeeper?: boolean;
   originalTeamId?: string; // Time original do jogador (quando afastado)
   removedAt?: number; // Timestamp de quando foi removido

@@ -17,10 +17,10 @@ describe("buildSummary", () => {
     const mockSummaryBuild = buildSummary({
       ...mockPelada,
       players: [
-        { id: "p1", name: "Carlos", goals: 5, status: "available" },
-        { id: "p2", name: "João", goals: 3, status: "available" },
-        { id: "p3", name: "Pedro", goals: 1, status: "available" },
-        { id: "p4", name: "Lucas", goals: 2, status: "available" },
+        { id: "p1", name: "Carlos", goals: 5 },
+        { id: "p2", name: "João", goals: 3 },
+        { id: "p3", name: "Pedro", goals: 1 },
+        { id: "p4", name: "Lucas", goals: 2 },
       ],
       matches: [
         makeMatchMock({
@@ -107,11 +107,11 @@ describe("buildSummary", () => {
         }),
       ],
       players: [
-        { id: "p1", name: "Carlos", goals: 2, status: "available" },
-        { id: "p2", name: "João", goals: 3, status: "available" },
-        { id: "p3", name: "Pedro", goals: 1, status: "available" },
-        { id: "p4", name: "Lucas", goals: 2, status: "available" },
-        { id: "p5", name: "Daniel", goals: 6, status: "available" },
+        { id: "p1", name: "Carlos", goals: 2 },
+        { id: "p2", name: "João", goals: 3 },
+        { id: "p3", name: "Pedro", goals: 1 },
+        { id: "p4", name: "Lucas", goals: 2 },
+        { id: "p5", name: "Daniel", goals: 6 },
       ],
     });
 
@@ -120,7 +120,6 @@ describe("buildSummary", () => {
         id: "p5",
         name: "Daniel",
         goals: 6,
-        status: "available",
       }),
     );
   });

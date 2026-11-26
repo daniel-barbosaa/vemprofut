@@ -55,17 +55,6 @@ export const createTeamsSlice: StateCreator<PeladaState, [], [], TeamsSlice> = (
       }
     }
 
-    // primeiros dois times começam jogando
-    if (teams.length >= 2) {
-      teams[0].players.forEach((player) => {
-        player.status = "playing";
-      });
-
-      teams[1].players.forEach((player) => {
-        player.status = "playing";
-      });
-    }
-
     set({
       pelada: {
         ...pelada,
@@ -294,18 +283,6 @@ export const createTeamsSlice: StateCreator<PeladaState, [], [], TeamsSlice> = (
 
       // 6. ATUALIZAR UI - STATUS DOS JOGADORES
 
-      updatedQueue.forEach((team, index) => {
-        team.players.forEach((player) => {
-          if (index < 2) {
-            player.status = "playing";
-          } else if (team.isResting) {
-            player.status = "resting";
-          } else {
-            player.status = "waiting";
-          }
-        });
-      });
-
       // 7. ATUALIZAR HISTÓRICO
       const updatedLastMatch = {
         ...lastMatch,
@@ -440,8 +417,6 @@ export const createTeamsSlice: StateCreator<PeladaState, [], [], TeamsSlice> = (
       sourceTeam.players = sourceTeam.players.filter(
         (player) => player.id !== playerId,
       );
-
-      player.status = targetTeamIndex < 2 ? "playing" : "waiting";
 
       targetTeam.players.push(player);
 

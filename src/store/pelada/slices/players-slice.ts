@@ -23,7 +23,6 @@ export const createPlayersSlice: StateCreator<
     const newPlayer: Player = {
       id: uuid(),
       name,
-      status: pelada.sessionStarted ? "pending" : "available",
       goals: 0,
     };
 
